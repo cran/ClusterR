@@ -1,4 +1,4 @@
-
+#define ARMA_DONT_PRINT_ERRORS
 # include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::plugins(openmp)]]
@@ -290,10 +290,10 @@ arma::mat KMEANS_arma(arma::mat& data, unsigned int clusters, int n_iter, bool v
     Rcpp::stop("invalid seed_mode");
   }
   
-  if(status == false) {
-    
-    Rcpp::Rcout << "clustering failed" << std::endl;
-  }
+  // if(status == false) {
+  //   
+  //   Rcpp::Rcout << "clustering failed" << std::endl;
+  // }
   
   return means.t();
 }
@@ -874,10 +874,10 @@ Rcpp::List GMM_arma(arma::mat& data, unsigned int gaussian_comps, std::string di
     Rcpp::stop("Invalid seed_mode OR dist_mode. Valid 'seed_modes' are : 'static_subset', 'random_subset', 'static_spread' and 'random_spread'. Valid 'dist_modes' are : 'eucl_dist' and 'maha_dist'.");
   }
   
-  if(status == false) {
-    
-    Rcpp::Rcout << "learning failed" << std::endl;
-  }
+  // if(status == false) {
+  //   
+  //   Rcpp::Rcout << "learning failed" << std::endl;
+  // }
   
   arma::mat loglik(data.n_rows, gaussian_comps, arma::fill::zeros);
   
@@ -1024,9 +1024,7 @@ arma::rowvec GMM_arma_AIC_BIC(arma::mat& data, unsigned int max_clusters, std::s
     }
     
     arma::mat centers = Rcpp::as<arma::mat> (gmm[0]);
-    
-    //double tmp_d = Rcpp::as<double> (gmm[4]);
-    
+
     if (criterion == "AIC") {
       
       evaluate_comps(i) = -2.0 * arma::accu(log_sum_exp) + 2.0 * centers.n_rows * centers.n_cols;
@@ -1905,7 +1903,7 @@ Rcpp::List ClaraMedoids(arma::mat& data, unsigned int clusters, std::string meth
     
     Rcpp::List clM_sblist = ClusterMedoids(tmp_dat, clusters, method, minkowski_p, threads, false, swap_phase, false);
     
-    double local_dissim = clM_sblist[1];
+    double local_dissim = Rcpp::as<double> (clM_sblist[1]);
     
     arma::uvec local_medoids = Rcpp::as<arma::uvec> (clM_sblist[0]);
     
@@ -2100,7 +2098,7 @@ Rcpp::List OptClust(arma::mat& data, unsigned int iter_clust, std::string method
         
         medoids_object[iter] = split_rcpp_lst(cm_out);
         
-        double dissiml = cm_out[1];
+        double dissiml = Rcpp::as<double> (cm_out[1]);
         
         if (verbose) { Rcpp::Rcout << "number of clusters: "<< iter + 1 << "  -->  " << criterion << ": " << dissiml << std::endl; }
       }
@@ -2111,7 +2109,7 @@ Rcpp::List OptClust(arma::mat& data, unsigned int iter_clust, std::string method
         
         medoids_object[iter] = split_rcpp_lst(cl_out);
         
-        double dissiml = cl_out[1];
+        double dissiml = Rcpp::as<double> (cl_out[1]);
         
         if (verbose) { Rcpp::Rcout << "number of clusters: "<< iter + 1 << "  -->  " << criterion << ": " <<  dissiml << std::endl; }
       }

@@ -42,7 +42,10 @@ X = dietary_survey_IBS[, -ncol(dietary_survey_IBS)]   # data (excluding the resp
 y = dietary_survey_IBS[, ncol(dietary_survey_IBS)]    # the response variable
 
 dat = center_scale(X, mean_center = T, sd_scale = T)  # centering and scaling the data
+```
 
+
+```{r, eval = F}
 gmm = GMM(dat, 2, dist_mode = "maha_dist", seed_mode = "random_subset", km_iter = 10,
           
           em_iter = 10, verbose = F)          
@@ -51,8 +54,6 @@ gmm = GMM(dat, 2, dist_mode = "maha_dist", seed_mode = "random_subset", km_iter 
 
 pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)    
 
-table(pr$cluster_labels)
-
 ```
 <br>
 
@@ -60,7 +61,7 @@ The *GMM* function, initially, returns the *centroids*, the *covariance matrix* 
 
 In addition to the previous mentioned functions, the **Optimal_Clusters_GMM** can be utilized to estimate the number of clusters of the data using either the *AIC* (Akaike information) or the *BIC* (Bayesian information) criterion,
 
-```{r, eval = T}
+```{r, eval = F}
 
 opt_gmm = Optimal_Clusters_GMM(dat, max_clusters = 10, criterion = "BIC", 
                                
@@ -80,25 +81,36 @@ opt_gmm = Optimal_Clusters_GMM(dat, max_clusters = 10, criterion = "BIC",
 In case of model selection, among a specific number of models, the model with the lowest [BIC](https://en.wikipedia.org/wiki/Bayesian_information_criterion) should be preferred, which is true here for a number of clusters equal to 2.
 
 
-Assuming that true labels are available, then one could use the base function *table* to observe any miss-classifications,
-
-```{r , eval = T}
-
-table(dietary_survey_IBS$class, pr$cluster_labels)
-
-```
-<br>
-
-Besides the previous base function, the ClusterR package offers the user **external_validation** methods (*rand_index*, *adjusted_rand_index*, *jaccard_index*, *fowlkes_Mallows_index*, *mirkin_metric*, *purity*, *entropy*, *nmi* (normalized mutual information) and *var_info* (variation of information) to validate the output clusters,
+Assuming that true labels are available, then one could use the **external_validation** methods (*rand_index*, *adjusted_rand_index*, *jaccard_index*, *fowlkes_Mallows_index*, *mirkin_metric*, *purity*, *entropy*, *nmi* (normalized mutual information) and *var_info* (variation of information) to validate the output clusters,
 
 
-```{r , eval = T}
+```{r , eval = F}
 
 res = external_validation(dietary_survey_IBS$class, pr$cluster_labels, 
                           
                           method = "adjusted_rand_index", summary_stats = T)
 
 res
+
+##  
+## ---------------------------------------- 
+## purity                         : 1 
+## entropy                        : 0 
+## normalized mutual information  : 1 
+## variation of information       : 0 
+## ---------------------------------------- 
+## specificity                    : 1 
+## sensitivity                    : 1 
+## precision                      : 1 
+## recall                         : 1 
+## F-measure                      : 1 
+## ---------------------------------------- 
+## accuracy OR rand-index         : 1 
+## adjusted-rand-index            : 1 
+## jaccard-index                  : 1 
+## fowlkes-mallows-index          : 1 
+## mirkin-metric                  : 0 
+## ----------------------------------------
 
 ```
 <br>
@@ -122,7 +134,7 @@ The *KMeans_arma* is faster than the KMeans_rcpp function, however, it initially
 I'll reduce the dimensions of the dietary_survey_IBS data using PCA and particularly the *princomp* function of the *stats* package, so that a 2-dimensional plot of the resulted clusters is possible,
 
 
-```{r , eval = T}
+```{r , eval = F}
 
 pca_dat = stats::princomp(dat)$scores[, 1:2]
 

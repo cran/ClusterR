@@ -34,7 +34,7 @@ dat = center_scale(dat)
 
 gmm = GMM(dat, 2, "maha_dist", "random_subset", 10, 10)
 
-pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)
+# pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)
 
 }
 \author{

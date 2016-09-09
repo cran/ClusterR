@@ -28,9 +28,9 @@ dat = dietary_survey_IBS[, -ncol(dietary_survey_IBS)]
 
 dat = center_scale(dat)
 
-km = KMeans_arma(dat, clusters = 2, n_iter = 10, "random_subset")
+km = KMeans_rcpp(dat, clusters = 2, num_init = 5, max_iters = 100, initializer = 'optimal_init')
 
-pr = predict_KMeans(dat, km)
+pr = predict_KMeans(dat, km$centroids)
 }
 \author{
 Lampros Mouselimis

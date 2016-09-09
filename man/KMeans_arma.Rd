@@ -23,7 +23,7 @@ KMeans_arma(data, clusters, n_iter = 10, seed_mode = "random_subset",
 \item{seed}{integer value for random number generator (RNG)}
 }
 \value{
-the centroids as a matrix
+the centroids as a matrix. In case of Error it returns the error message, whereas in case of an empty centroids-matrix it returns a warning-message.
 }
 \description{
 k-means using the Armadillo library

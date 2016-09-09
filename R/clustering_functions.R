@@ -2,6 +2,27 @@
 utils::globalVariables(c("x", "y"))           # to avoid the following NOTE when package checking takes place --> plot_2d: no visible binding for global variables 'x', 'y'
 
 
+#' tryCatch function to prevent armadillo errors
+#' 
+#' @keywords internal
+
+tryCatch_GMM <- function(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed) {
+  
+  Error = tryCatch(GMM_arma(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed), 
+                   
+                   error = function(e) e)
+  
+  if (inherits(Error, "error")) {
+    
+    return(list(Error = Error, warning = "probable causes of error: 'warning: gmm_diag::learn(): number of vectors is less than number of gaussians' OR 'warning: gmm_diag::learn(): EM algorithm failed'"))}
+  
+  else {
+    
+    return(Error)
+  }
+}
+
+
 #' Gaussian Mixture Model clustering
 #'
 #' @param data matrix or data frame
@@ -13,7 +34,7 @@ utils::globalVariables(c("x", "y"))           # to avoid the following NOTE when
 #' @param verbose either TRUE or FALSE; enable or disable printing of progress during the k-means and EM algorithms
 #' @param var_floor the variance floor (smallest allowed value) for the diagonal covariances
 #' @param seed integer value for random number generator (RNG)
-#' @return a list consisting of the centroids, covariance matrix ( where each row of the matrix represents a diagonal covariance matrix), weights and the log-likelihoods for each gaussian component.
+#' @return a list consisting of the centroids, covariance matrix ( where each row of the matrix represents a diagonal covariance matrix), weights and the log-likelihoods for each gaussian component. In case of Error it returns the error message and the possible causes.
 #' @details
 #' This function is an R implementation of the 'gmm_diag' class of the Armadillo library. The only exception is that user defined parameter settings are not supported, such as seed_mode = 'keep_existing'.
 #' For probabilistic applications, better model parameters are typically learned with dist_mode set to maha_dist.
@@ -53,11 +74,18 @@ GMM = function(data, gaussian_comps = 1, dist_mode = 'eucl_dist', seed_mode = 'r
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
   
-  res = GMM_arma(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed)
-
-  return(structure(list(centroids = res$centroids, covariance_matrices = res$covariance_matrices, weights = as.vector(res$weights), Log_likelihood = res$Log_likelihood_raw), 
+  res = tryCatch_GMM(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed)
+  
+  if ('Error' %in% names(res)) {
+    
+    return(res)}
+  
+  else {
+    
+    return(structure(list(centroids = res$centroids, covariance_matrices = res$covariance_matrices, weights = as.vector(res$weights), Log_likelihood = res$Log_likelihood_raw), 
                    
                    class = 'Gaussian Mixture Models'))
+  }
 }
 
 
@@ -83,7 +111,7 @@ GMM = function(data, gaussian_comps = 1, dist_mode = 'eucl_dist', seed_mode = 'r
 #' 
 #' gmm = GMM(dat, 2, "maha_dist", "random_subset", 10, 10)
 #' 
-#' pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)
+#' # pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)
 #'
 
 
@@ -113,6 +141,28 @@ predict_GMM = function(data, CENTROIDS, COVARIANCE, WEIGHTS) {
 
 
 
+#' tryCatch function to prevent armadillo errors in GMM_arma_AIC_BIC
+#' 
+#' @keywords internal
+
+tryCatch_optimal_clust_GMM <- function(data, max_clusters, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed) {
+  
+  Error = tryCatch(GMM_arma_AIC_BIC(data, max_clusters, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed), 
+                   
+                   error = function(e) e)
+  
+  if (inherits(Error, "error")) {
+    
+    return(list(Error = Error, warning = "probable causes of error: 'warning: gmm_diag::learn(): number of vectors is less than number of gaussians' OR 'warning: gmm_diag::learn(): EM algorithm failed'"))}
+  
+  else {
+    
+    return(Error)
+  }
+}
+
+
+
 #' Optimal number of Clusters for the gaussian mixture models
 #'
 #' @param data matrix or data frame
@@ -126,7 +176,7 @@ predict_GMM = function(data, CENTROIDS, COVARIANCE, WEIGHTS) {
 #' @param var_floor the variance floor (smallest allowed value) for the diagonal covariances
 #' @param plot_data either TRUE or FALSE indicating whether the results of the function should be plotted
 #' @param seed integer value for random number generator (RNG)
-#' @return a vector with either the AIC or BIC for each iteration
+#' @return a vector with either the AIC or BIC for each iteration. In case of Error it returns the error message and the possible causes.
 #' @author Lampros Mouselimis
 #' @details
 #' \strong{AIC}  : the Akaike information criterion
@@ -162,59 +212,93 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
   if (!is.logical(verbose)) stop('the verbose parameter should be either TRUE or FALSE')
   if (var_floor < 0 ) stop('the var_floor parameter can not be negative')
   
-  if (ncol(data) < max_clusters) { warning("the number of columns of the data should be larger than 'max_clusters'", call. = F); cat(" ", '\n') }
+  if (ncol(data) < max_clusters && verbose) { warning("the number of columns of the data should be larger than 'max_clusters'", call. = F); cat(" ", '\n') }
   
   flag_non_finite = check_NaN_Inf(data)
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
   
-  gmm = GMM_arma_AIC_BIC(data, max_clusters, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed)
+  gmm = tryCatch_optimal_clust_GMM(data, max_clusters, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed)
+
+  if ('Error' %in% names(gmm)) {
+    
+    return(gmm)}
   
-  if (plot_data) {
-    
-    if (dev.cur() != 1) {
+  else {
+  
+    if (plot_data) {
       
-      dev.off()                          # reset par()
+      if (dev.cur() != 1) {
+        
+        dev.off()                          # reset par()
+      }
+      
+      vec_out = as.vector(gmm)
+      
+      tmp_VAL = as.vector(na.omit(vec_out))
+      
+      if (length(which(is.na(vec_out))) > 0) {
+        
+        x_dis = (1:length(vec_out))[-which(is.na(vec_out))]
+        
+        y_dis = vec_out[-which(is.na(vec_out))]}
+      
+      else {
+        
+        x_dis = 1:length(vec_out)
+        
+        y_dis = vec_out
+      }
+      
+      y_MAX = max(tmp_VAL)
+      
+      plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
+      
+      axis(1, at = seq(1, length(vec_out) , by = 1))
+      
+      axis(2, at = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), las = 1, cex.axis = 0.8)
+      
+      abline(h = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), v = seq(1, length(vec_out) , by = 1),
+             
+             col = "gray", lty = 3)
+      
+      text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
     }
+  
+    res = as.vector(gmm)
     
-    vec_out = as.vector(gmm)
+    class(res) = 'Gaussian Mixture Models'
     
-    tmp_VAL = as.vector(na.omit(vec_out))
-    
-    if (length(which(is.na(vec_out))) > 0) {
-      
-      x_dis = (1:length(vec_out))[-which(is.na(vec_out))]
-      
-      y_dis = vec_out[-which(is.na(vec_out))]}
-    
-    else {
-      
-      x_dis = 1:length(vec_out)
-      
-      y_dis = vec_out
-    }
-    
-    y_MAX = max(tmp_VAL)
-    
-    plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
-    
-    axis(1, at = seq(1, length(vec_out) , by = 1))
-    
-    axis(2, at = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), las = 1, cex.axis = 0.8)
-    
-    abline(h = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), v = seq(1, length(vec_out) , by = 1),
-           
-           col = "gray", lty = 3)
-    
-    text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
+    return(res)
   }
-  
-  res = as.vector(gmm)
-  
-  class(res) = 'Gaussian Mixture Models'
-  
-  return(res)
 }
+
+
+
+#' tryCatch function to prevent armadillo errors in KMEANS_arma
+#' 
+#' @keywords internal
+
+tryCatch_KMEANS_arma <- function(data, clusters, n_iter, verbose, seed_mode, CENTROIDS, seed) {
+  
+  Error = tryCatch(KMEANS_arma(data, clusters, n_iter, verbose, seed_mode, CENTROIDS, seed), 
+                   
+                   error = function(e) e)
+  
+  if (inherits(Error, "error")) {
+    
+    return(list(Error = Error, message = Error$message))}
+  
+  else if (sum(dim(Error)) == 0) {
+    
+    return("warning: kmeans(): number of vectors is less than number of means")}
+  
+  else {
+    
+    return(Error)
+  }
+}
+
 
 
 
@@ -227,7 +311,7 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
 #' @param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
 #' @param CENTROIDS a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should be equal to the columns of the data. CENTROIDS should be used in combination with seed_mode 'keep_existing'.
 #' @param seed integer value for random number generator (RNG)
-#' @return the centroids as a matrix
+#' @return the centroids as a matrix. In case of Error it returns the error message, whereas in case of an empty centroids-matrix it returns a warning-message.
 #' @details
 #' This function is an R implementation of the 'kmeans' class of the Armadillo library.
 #' It is faster than the KMeans_rcpp function but it lacks some features. For more info see the details section of the KMeans_rcpp function.
@@ -267,11 +351,18 @@ KMeans_arma = function(data, clusters, n_iter = 10, seed_mode = "random_subset",
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
   
-  res = KMEANS_arma(data, clusters, n_iter, verbose, seed_mode, CENTROIDS, seed)
+  res = tryCatch_KMEANS_arma(data, clusters, n_iter, verbose, seed_mode, CENTROIDS, seed)
+
+  if ('Error' %in% names(res) || is.character(res)) {
+    
+    return(res)}
   
-  class(res) = "k-means clustering"
+  else {
+    
+    class(res) = "k-means clustering"
   
-  return(res)
+    return(res)
+  }
 }
 
 
@@ -388,9 +479,9 @@ KMeans_rcpp = function(data, clusters, num_init = 1, max_iters = 100, initialize
 #' 
 #' dat = center_scale(dat)
 #' 
-#' km = KMeans_arma(dat, clusters = 2, n_iter = 10, "random_subset")
+#' km = KMeans_rcpp(dat, clusters = 2, num_init = 5, max_iters = 100, initializer = 'optimal_init')
 #' 
-#' pr = predict_KMeans(dat, km)
+#' pr = predict_KMeans(dat, km$centroids)
 #
 
 

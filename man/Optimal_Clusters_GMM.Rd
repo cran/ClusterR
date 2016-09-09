@@ -33,7 +33,7 @@ Optimal_Clusters_GMM(data, max_clusters, criterion = "AIC",
 \item{seed}{integer value for random number generator (RNG)}
 }
 \value{
-a vector with either the AIC or BIC for each iteration
+a vector with either the AIC or BIC for each iteration. In case of Error it returns the error message and the possible causes.
 }
 \description{
 Optimal number of Clusters for the gaussian mixture models

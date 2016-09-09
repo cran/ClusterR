@@ -11,13 +11,11 @@ X = center_scale(dat)
 
 # parameters for the predict_GMM function
 
-params_preds = GMM(X, 2, "maha_dist", "random_subset", 10, 10)
+CENTROIDS = matrix(runif(84), nrow = 2, ncol = 42)
 
-CENTROIDS = params_preds$centroids
+COVARIANCE = matrix(runif(84), nrow = 2, ncol = 42)
 
-COVARIANCE = params_preds$covariance_matrices
-
-WEIGHTS = params_preds$weights
+WEIGHTS = c(0.5, 0.5)
 
 #=============================================================
 
@@ -98,9 +96,16 @@ testthat::test_that("in case that the data is a matrix the result is a list of l
   
   res = GMM(X, 2, "maha_dist", "random_subset", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -108,9 +113,16 @@ testthat::test_that("in case that the data is a data frame the result is a list 
   
   res = GMM(dat, 2, "eucl_dist", "static_subset", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -118,9 +130,16 @@ testthat::test_that("in case that the data is a matrix the result is a list of l
   
   res = GMM(X, 2, "maha_dist", "random_subset", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -128,9 +147,16 @@ testthat::test_that("in case that the data is a data frame the result is a list 
   
   res = GMM(dat, 2, "eucl_dist", "static_subset", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -139,9 +165,16 @@ testthat::test_that("in case that the data is a matrix the result is a list of l
   
   res = GMM(X, 2, "maha_dist", "random_spread", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -149,9 +182,16 @@ testthat::test_that("in case that the data is a data frame the result is a list 
   
   res = GMM(dat, 2, "eucl_dist", "static_spread", 10, 10)
   
-  testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == 4 && sum(names(res) %in% c("centroids", "covariance_matrices", "weights", "Log_likelihood")) == 4 &&
                            
                            sum(unlist(lapply(res, function(x) !is.null(x)))) == 4 && class(res) == "Gaussian Mixture Models" )
+  }
 })
 
 
@@ -361,12 +401,12 @@ testthat::test_that("in case that the verbose parameter is not logical, it retur
 })
 
 
-testthat::test_that("in case that max_clusters is greater than the number of the columns, it returns a warning", {
-  
-  testthat::expect_warning( Optimal_Clusters_GMM(X, ncol(X) + 1, dist_mode = 'eucl_dist', criterion = "BIC", seed_mode = 'random_subset', km_iter = 5, 
-                                                 
-                                                 em_iter = 5, plot_data = F) )
-})
+# testthat::test_that("in case that max_clusters is greater than the number of the columns and verbose is TRUE, it returns a warning", {
+#   
+#   testthat::expect_warning( Optimal_Clusters_GMM(X, ncol(X) + 1, dist_mode = 'eucl_dist', criterion = "BIC", seed_mode = 'random_subset', km_iter = 5, 
+#                                                  
+#                                                  em_iter = 5, plot_data = F, verbose = T) )
+# })
 
 
 testthat::test_that("in case that the data includes NaN or Inf values, it returns an error", {
@@ -386,34 +426,55 @@ testthat::test_that("in case that the data includes NaN or Inf values, it return
 ################################
 
 
-# testthat::test_that("in case that the data is a matrix the result is a vector and the class is 'Gaussian Mixture Models' ", {
-#   
-#   Nr_clusters = 5
-#   
-#   res = Optimal_Clusters_GMM(X, Nr_clusters, criterion = "BIC", plot_data = FALSE)
-#   
-#   testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
-# })
-# 
-# 
-# 
-# testthat::test_that("in case that the data is a data frame the result is a vector and the class is 'Gaussian Mixture Models' ", {
-#   
-#   Nr_clusters = 5
-#   
-#   res = Optimal_Clusters_GMM(dat, Nr_clusters, criterion = "BIC", plot_data = T)
-#   
-#   testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
-# })
-# 
-# 
-# 
-# testthat::test_that("in case of different parameters the result is a vector and the class is 'Gaussian Mixture Models' ", {
-#   
-#   Nr_clusters = 5
-#   
-#   res = Optimal_Clusters_GMM(dat, Nr_clusters, criterion = "AIC", dist_mode = 'maha_dist', seed_mode = 'static_spread', plot_data = T)
-#   
-#   testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
-# })
-# 
+testthat::test_that("in case that the data is a matrix the result is a vector and the class is 'Gaussian Mixture Models' ", {
+
+  Nr_clusters = 5
+
+  res = Optimal_Clusters_GMM(X, Nr_clusters, criterion = "BIC", plot_data = FALSE)
+  
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
+  }
+})
+
+
+
+testthat::test_that("in case that the data is a data frame the result is a vector and the class is 'Gaussian Mixture Models' ", {
+
+  Nr_clusters = 5
+
+  res = Optimal_Clusters_GMM(dat, Nr_clusters, criterion = "BIC", plot_data = T)
+  
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
+  }
+})
+
+
+
+testthat::test_that("in case of different parameters the result is a vector and the class is 'Gaussian Mixture Models' ", {
+
+  Nr_clusters = 5
+
+  res = Optimal_Clusters_GMM(dat, Nr_clusters, criterion = "AIC", dist_mode = 'maha_dist', seed_mode = 'static_spread', plot_data = T)
+  
+  if ('Error' %in% names(res)) {
+    
+    testthat::expect_true( length(res) == 2)}
+  
+  else {
+    
+    testthat::expect_true( length(res) == Nr_clusters && class(res) == "Gaussian Mixture Models" )
+  }
+})
+

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2016-09-06" />
+<meta name="date" content="2016-09-08" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author"><em>Lampros Mouselimis</em></h4>
-<h4 class="date"><em>2016-09-06</em></h4>
+<h4 class="date"><em>2016-09-08</em></h4>
 
 
 
@@ -96,20 +96,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 y =<span class="st"> </span>dietary_survey_IBS[, <span class="kw">ncol</span>(dietary_survey_IBS)]    <span class="co"># the response variable</span>
 
-dat =<span class="st"> </span><span class="kw">center_scale</span>(X, <span class="dt">mean_center =</span> T, <span class="dt">sd_scale =</span> T)  <span class="co"># centering and scaling the data</span>
-
-gmm =<span class="st"> </span><span class="kw">GMM</span>(dat, <span class="dv">2</span>, <span class="dt">dist_mode =</span> <span class="st">&quot;maha_dist&quot;</span>, <span class="dt">seed_mode =</span> <span class="st">&quot;random_subset&quot;</span>, <span class="dt">km_iter =</span> <span class="dv">10</span>,
+dat =<span class="st"> </span><span class="kw">center_scale</span>(X, <span class="dt">mean_center =</span> T, <span class="dt">sd_scale =</span> T)  <span class="co"># centering and scaling the data</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gmm =<span class="st"> </span><span class="kw">GMM</span>(dat, <span class="dv">2</span>, <span class="dt">dist_mode =</span> <span class="st">&quot;maha_dist&quot;</span>, <span class="dt">seed_mode =</span> <span class="st">&quot;random_subset&quot;</span>, <span class="dt">km_iter =</span> <span class="dv">10</span>,
           
           <span class="dt">em_iter =</span> <span class="dv">10</span>, <span class="dt">verbose =</span> F)          
 
 <span class="co"># predict centroids, covariance matrix and weights</span>
 
-pr =<span class="st"> </span><span class="kw">predict_GMM</span>(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)    
-
-<span class="kw">table</span>(pr$cluster_labels)</code></pre></div>
-<pre><code>## 
-##   0   1 
-## 200 200</code></pre>
+pr =<span class="st"> </span><span class="kw">predict_GMM</span>(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)    </code></pre></div>
 <p><br></p>
 <p>The <em>GMM</em> function, initially, returns the <em>centroids</em>, the <em>covariance matrix</em> ( where each row of the matrix represents a diagonal covariance matrix), the <em>weights</em> and the <em>log-likelihoods</em> for each gaussian component. Then, the <em>predict_GMM</em> function takes the output of the <em>GMM</em> model and returns the probable clusters.</p>
 <p>In addition to the previous mentioned functions, the <strong>Optimal_Clusters_GMM</strong> can be utilized to estimate the number of clusters of the data using either the <em>AIC</em> (Akaike information) or the <em>BIC</em> (Bayesian information) criterion,</p>
@@ -127,18 +121,14 @@ pr =<span class="st"> </span><span class="kw">predict_GMM</span>(dat, gmm$centro
 </div>
 <p><br></p>
 <p>In case of model selection, among a specific number of models, the model with the lowest <a href="https://en.wikipedia.org/wiki/Bayesian_information_criterion">BIC</a> should be preferred, which is true here for a number of clusters equal to 2.</p>
-<p>Assuming that true labels are available, then one could use the base function <em>table</em> to observe any miss-classifications,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(dietary_survey_IBS$class, pr$cluster_labels)</code></pre></div>
-<pre><code>##    
-##       0   1
-##   0   0 200
-##   1 200   0</code></pre>
-<p><br></p>
-<p>Besides the previous base function, the ClusterR package offers the user <strong>external_validation</strong> methods (<em>rand_index</em>, <em>adjusted_rand_index</em>, <em>jaccard_index</em>, <em>fowlkes_Mallows_index</em>, <em>mirkin_metric</em>, <em>purity</em>, <em>entropy</em>, <em>nmi</em> (normalized mutual information) and <em>var_info</em> (variation of information) to validate the output clusters,</p>
+<p>Assuming that true labels are available, then one could use the <strong>external_validation</strong> methods (<em>rand_index</em>, <em>adjusted_rand_index</em>, <em>jaccard_index</em>, <em>fowlkes_Mallows_index</em>, <em>mirkin_metric</em>, <em>purity</em>, <em>entropy</em>, <em>nmi</em> (normalized mutual information) and <em>var_info</em> (variation of information) to validate the output clusters,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">external_validation</span>(dietary_survey_IBS$class, pr$cluster_labels, 
                           
-                          <span class="dt">method =</span> <span class="st">&quot;adjusted_rand_index&quot;</span>, <span class="dt">summary_stats =</span> T)</code></pre></div>
-<pre><code>##  
+                          <span class="dt">method =</span> <span class="st">&quot;adjusted_rand_index&quot;</span>, <span class="dt">summary_stats =</span> T)
+
+res
+
+##  
 ## ---------------------------------------- 
 ## purity                         : 1 
 ## entropy                        : 0 
@@ -156,9 +146,7 @@ pr =<span class="st"> </span><span class="kw">predict_GMM</span>(dat, gmm$centro
 ## jaccard-index                  : 1 
 ## fowlkes-mallows-index          : 1 
 ## mirkin-metric                  : 0 
-## ----------------------------------------</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res</code></pre></div>
-<pre><code>## [1] 1</code></pre>
+## ----------------------------------------</code></pre></div>
 <p><br></p>
 <p>and if the <em>summary_stats</em> parameter is set to TRUE then it also returns the <em>specificity</em>, <em>sensitivity</em>, <em>precision</em>, <em>recall</em> and <em>F-measure</em> metrics. <br><br></p>
 </div>
@@ -172,21 +160,13 @@ pr =<span class="st"> </span><span class="kw">predict_GMM</span>(dat, gmm$centro
 
 km =<span class="st"> </span><span class="kw">KMeans_arma</span>(pca_dat, <span class="dt">clusters =</span> <span class="dv">2</span>, <span class="dt">n_iter =</span> <span class="dv">10</span>, <span class="dt">seed_mode =</span> <span class="st">&quot;random_subset&quot;</span>, 
                  
-                 <span class="dt">verbose =</span> T, <span class="dt">CENTROIDS =</span> <span class="ot">NULL</span>)</code></pre></div>
-<pre><code>## kmeans(): generating initial means
-## kmeans(): n_threads: 8
-## kmeans(): iteration:    1   delta: 13.0164
-## kmeans(): iteration:    2   delta: 3.49254
-## kmeans(): iteration:    3   delta: 0.0784074
-## kmeans(): iteration:    4   delta: 0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pr =<span class="st"> </span><span class="kw">predict_KMeans</span>(pca_dat, km)
+                 <span class="dt">verbose =</span> T, <span class="dt">CENTROIDS =</span> <span class="ot">NULL</span>)
 
-<span class="kw">table</span>(dietary_survey_IBS$class, pr)</code></pre></div>
-<pre><code>##    pr
-##       1   2
-##   0   0 200
-##   1 200   0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(km) =<span class="st"> 'matrix'</span>
+pr =<span class="st"> </span><span class="kw">predict_KMeans</span>(pca_dat, km)
+
+<span class="kw">table</span>(dietary_survey_IBS$class, pr)
+
+<span class="kw">class</span>(km) =<span class="st"> 'matrix'</span>
 
 <span class="kw">plot_2d</span>(<span class="dt">data =</span> pca_dat, <span class="dt">clusters =</span> <span class="kw">as.vector</span>(pr), <span class="dt">centroids_medoids =</span> <span class="kw">as.matrix</span>(km))</code></pre></div>
 <p><br></p>
@@ -276,7 +256,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.463902 secs</code></pre>
+<pre><code>## time to complete : 2.426364 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_init =<span class="st"> </span>km_init$centroids
 
 getclust_init =<span class="st"> </span>km_init$clusters
@@ -304,7 +284,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 0.8564591 secs</code></pre>
+<pre><code>## time to complete : 0.8308105 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_mb =<span class="st"> </span>km_mb$centroids
 
 new_im_mb =<span class="st"> </span>getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span>
@@ -508,7 +488,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.945297 secs</code></pre>
+<pre><code>## time to complete : 2.886399 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -540,7 +520,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 14.23301 secs</code></pre>
+<pre><code>## time to complete : 14.29513 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>

@@ -28,7 +28,7 @@ GMM(data, gaussian_comps = 1, dist_mode = "eucl_dist",
 \item{seed}{integer value for random number generator (RNG)}
 }
 \value{
-a list consisting of the centroids, covariance matrix ( where each row of the matrix represents a diagonal covariance matrix), weights and the log-likelihoods for each gaussian component.
+a list consisting of the centroids, covariance matrix ( where each row of the matrix represents a diagonal covariance matrix), weights and the log-likelihoods for each gaussian component. In case of Error it returns the error message and the possible causes.
 }
 \description{
 Gaussian Mixture Model clustering
