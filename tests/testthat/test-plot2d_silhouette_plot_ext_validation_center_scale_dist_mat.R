@@ -348,6 +348,12 @@ testthat::test_that("in case that the method parameter is minkowski and the mink
 })
 
 
+testthat::test_that("in case that the threads parameter is less than 1, it returns an error", {
+  
+  testthat::expect_error( distance_matrix(X, method = 'euclidean', threads = 0) )
+})
+
+
 testthat::test_that("in case that the data includes NaN or Inf values, it returns an error", {
   
   tmp_dat = X

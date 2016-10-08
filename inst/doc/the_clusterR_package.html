@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2016-09-08" />
+<meta name="date" content="2016-10-08" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author"><em>Lampros Mouselimis</em></h4>
-<h4 class="date"><em>2016-09-08</em></h4>
+<h4 class="date"><em>2016-10-08</em></h4>
 
 
 
@@ -155,7 +155,7 @@ res
 <p><a href="https://en.wikipedia.org/wiki/K-means_clustering">k-means</a> clustering is a method of vector quantization, originally from signal processing, that is popular for cluster analysis in data mining. k-means clustering aims to partition <em>n</em> observations into <em>k</em> clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster. This results in a partitioning of the data space into <a href="https://en.wikipedia.org/wiki/Voronoi_diagram">Voronoi</a> cells. The most common algorithm uses an iterative refinement technique. Due to its ubiquity, it is often called the k-means algorithm; it is also referred to as <a href="https://en.wikipedia.org/wiki/Lloyd%27s_algorithm">Lloyd’s algorithm</a>, particularly in the computer science community. <br></p>
 <p>The ClusterR package provides two different k-means functions, the <em>KMeans_arma</em>, which is an R implementation of the k-means armadillo library and the <em>KMeans_rcpp</em> which uses the RcppArmadillo package. Both functions come to the same output results, however, they return different features which I’ll explain in the next code chunks. <br><br></p>
 <p><strong>KMeans_arma</strong> <br></p>
-<p>The <em>KMeans_arma</em> is faster than the KMeans_rcpp function, however, it initially outputs only the centroids for a specific number of clusters. Furthermore, the number of columns of the data should be larger than the number of clusters, otherwise, it raises an error. If the clustering fails, the means matrix is reset and a boolean equal to FALSE is returned. The clustering will run faster on multi-core machines when OpenMP is enabled (eg. -fopenmp in GCC). The algorithm is initialized once and 10 iterations are typically sufficient for convergence. The initial centroids are seeded using one of <em>keep_existing</em>, <em>static_subset</em>, <em>random_subset</em>, <em>static_spread</em> and <em>random_spread</em>. If the seed_mode equals to keep_existing then the user should supply a matrix of centroids. <br><br> I’ll reduce the dimensions of the dietary_survey_IBS data using PCA and particularly the <em>princomp</em> function of the <em>stats</em> package, so that a 2-dimensional plot of the resulted clusters is possible,</p>
+<p>The <em>KMeans_arma</em> is faster than the KMeans_rcpp function, however, it initially outputs only the centroids for a specific number of clusters. Furthermore, the number of columns of the data should be larger than the number of clusters, otherwise, it raises an error. The clustering will run faster on multi-core machines when OpenMP is enabled (eg. -fopenmp in GCC). The algorithm is initialized once and 10 iterations are typically sufficient for convergence. The initial centroids are seeded using one of <em>keep_existing</em>, <em>static_subset</em>, <em>random_subset</em>, <em>static_spread</em> and <em>random_spread</em>. If the seed_mode equals to keep_existing then the user should supply a matrix of centroids. <br><br> I’ll reduce the dimensions of the dietary_survey_IBS data using PCA and particularly the <em>princomp</em> function of the <em>stats</em> package, so that a 2-dimensional plot of the resulted clusters is possible,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pca_dat =<span class="st"> </span>stats::<span class="kw">princomp</span>(dat)$scores[, <span class="dv">1</span>:<span class="dv">2</span>]
 
 km =<span class="st"> </span><span class="kw">KMeans_arma</span>(pca_dat, <span class="dt">clusters =</span> <span class="dv">2</span>, <span class="dt">n_iter =</span> <span class="dv">10</span>, <span class="dt">seed_mode =</span> <span class="st">&quot;random_subset&quot;</span>, 
@@ -256,7 +256,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.426364 secs</code></pre>
+<pre><code>## time to complete : 2.577141 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_init =<span class="st"> </span>km_init$centroids
 
 getclust_init =<span class="st"> </span>km_init$clusters
@@ -284,7 +284,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 0.8308105 secs</code></pre>
+<pre><code>## time to complete : 0.8493881 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_mb =<span class="st"> </span>km_mb$centroids
 
 new_im_mb =<span class="st"> </span>getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span>
@@ -488,7 +488,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.886399 secs</code></pre>
+<pre><code>## time to complete : 3.135445 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -520,7 +520,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end -<span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)$units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 14.29513 secs</code></pre>
+<pre><code>## time to complete : 16.63382 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>

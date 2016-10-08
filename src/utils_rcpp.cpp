@@ -36,11 +36,11 @@ Rcpp::List cluster_indices(arma::vec CLUSTER) {
   
   arma::vec count_clust(unq_values.n_elem, arma::fill::zeros);
   
-  for (unsigned int j = 0; j < unq_values.n_elem; j++) {
+  for (int j = 0; j < unq_values.n_elem; j++) {
     
     int midl_val = 0;
     
-    for (unsigned int i = 0; i < CLUSTER.n_elem; i++) {
+    for (int i = 0; i < CLUSTER.n_elem; i++) {
       
       if (unq_values(j) == CLUSTER(i)) {
         
@@ -55,11 +55,11 @@ Rcpp::List cluster_indices(arma::vec CLUSTER) {
   
   int count_init = 0;
   
-  for (unsigned int k = 0; k < unq_values.n_elem; k++) {
+  for (int k = 0; k < unq_values.n_elem; k++) {
     
     Rcpp::NumericVector tmp_VEC(count_clust(k));
     
-    for (unsigned int j = 0; j < CLUSTER.n_elem; j++) {
+    for (int j = 0; j < CLUSTER.n_elem; j++) {
       
       if (unq_values(k) == CLUSTER(j)) {
         
@@ -151,7 +151,7 @@ int MinMat(arma::vec x) {
   
   int idx = 0;
   
-  for (unsigned int i = 0; i < x.n_elem; i++) {
+  for (int i = 0; i < x.n_elem; i++) {
     
     if (x(i) < out) {
       
@@ -175,7 +175,7 @@ arma::vec WCSS(arma::rowvec vec, arma::mat centroids) {
   
   arma::vec tmp_c(centroids.n_rows);
   
-  for (unsigned int i = 0; i < centroids.n_rows; i++) {
+  for (int i = 0; i < centroids.n_rows; i++) {
     
     tmp_c(i) = arma::as_scalar(arma::accu(arma::pow(vec - centroids.row(i), 2)));
   }
@@ -195,7 +195,7 @@ arma::rowvec validate_centroids(arma::mat& data, arma::mat init_centroids) {
   
   arma::rowvec tmp_idx(data.n_rows);
   
-  for (unsigned int k = 0; k < data.n_rows; k++) {
+  for (int k = 0; k < data.n_rows; k++) {
     
     arma::vec tmp_vec = WCSS(arma::conv_to< arma::rowvec >::from(data.row(k)), init_centroids);
     
@@ -226,7 +226,7 @@ double kmeans_pp_dist(arma::rowvec vec, arma::rowvec centroid) {
 //
 
 // [[Rcpp::export]]
-arma::mat kmeans_pp_init(arma::mat& data, unsigned int clusters, bool medoids = false) {
+arma::mat kmeans_pp_init(arma::mat& data, int clusters, bool medoids = false) {
   
   arma::rowvec centroid_data(data.n_rows);                                                 // begin with inf values as I'll pick in every iteration the minimum
   
@@ -242,7 +242,7 @@ arma::mat kmeans_pp_init(arma::mat& data, unsigned int clusters, bool medoids = 
   
   int idx = first(0);                                                                      // update idx in every iteration
   
-  for (unsigned int clust = 0; clust < clusters; clust++) {
+  for (int clust = 0; clust < clusters; clust++) {
     
     indices(clust) = idx;
     
@@ -250,7 +250,7 @@ arma::mat kmeans_pp_init(arma::mat& data, unsigned int clusters, bool medoids = 
     
     arma::rowvec tmp_dist(data.n_rows);
     
-    for (unsigned int i = 0; i < data.n_rows; i++) {                                                // iterate over the data-rows and calculate the distance between centroid and data
+    for (int i = 0; i < data.n_rows; i++) {                                                // iterate over the data-rows and calculate the distance between centroid and data
       
       double tmp_val = kmeans_pp_dist(arma::conv_to< arma::rowvec >::from(data.row(i)), choose_row);
       
@@ -271,7 +271,7 @@ arma::mat kmeans_pp_init(arma::mat& data, unsigned int clusters, bool medoids = 
     
     double r = rr(0);                                                                      // pick a random value using the randu() function of armadillo
     
-    for (unsigned int j = 0; j < cum_sum.n_elem; j++) {
+    for (int j = 0; j < cum_sum.n_elem; j++) {
       
       if (cum_sum(j) > r) {
         
@@ -330,7 +330,7 @@ Rcpp::NumericVector quantile_value(arma::rowvec x, int clusters) {
   
   Rcpp::NumericVector ans(IDX.n_elem);
   
-  for(unsigned int i = 0; i < IDX.n_elem; i++){
+  for(int i = 0; i < IDX.n_elem; i++){
     
     ans[i] = Rcpp::as<double>(quantile(x, IDX(i)));
   }
@@ -343,7 +343,7 @@ Rcpp::NumericVector quantile_value(arma::rowvec x, int clusters) {
 //
 
 // [[Rcpp::export]]
-arma::mat quantile_init_rcpp(arma::mat data, int sample_rows, unsigned int clusters, bool medoids = false) {
+arma::mat quantile_init_rcpp(arma::mat data, int sample_rows, int clusters, bool medoids = false) {
   
   arma::rowvec tmp_idx = sample_vec(sample_rows, 0, data.n_rows - 1, false);
   
@@ -378,7 +378,7 @@ arma::mat quantile_init_rcpp(arma::mat data, int sample_rows, unsigned int clust
   
   arma::uvec idx_out(clusters, arma::fill::zeros);
   
-  for (unsigned int j = 0; j < quant.n_elem; j++) {
+  for (int j = 0; j < quant.n_elem; j++) {
     
     if (j == 0) {
       
@@ -416,7 +416,7 @@ arma::mat quantile_init_rcpp(arma::mat data, int sample_rows, unsigned int clust
 //
 
 // [[Rcpp::export]]
-arma::mat check_medoids(arma::mat data, unsigned int clust, double tol = 0.5, bool medoids = true) {
+arma::mat check_medoids(arma::mat data, int clust, double tol = 0.5, bool medoids = true) {
   
   arma::vec medoids_out(clust);
   
@@ -430,9 +430,9 @@ arma::mat check_medoids(arma::mat data, unsigned int clust, double tol = 0.5, bo
   
   arma::mat shufl_dat = data.rows(shufl_idx);
   
-  unsigned int count_m = 0;
+  int count_m = 0;
   
-  for (unsigned int i = 0; i < shufl_dat.n_rows; i++) {
+  for (int i = 0; i < shufl_dat.n_rows; i++) {
     
     if (i == 0) {
       
@@ -455,13 +455,13 @@ arma::mat check_medoids(arma::mat data, unsigned int clust, double tol = 0.5, bo
         break;
       }
       
-      unsigned int count_diff = 0;
+      int count_diff = 0;
       
       arma::mat sub_mat = medoids_dat.submat(0, 0, count_m - 1, medoids_dat.n_cols - 1);
       
       arma::rowvec pot_row = arma::conv_to< arma::rowvec >::from(shufl_dat.row(i));
       
-      for (unsigned int j = 0; j < sub_mat.n_rows; j++) {
+      for (int j = 0; j < sub_mat.n_rows; j++) {
         
         double tmp_diff = arma::accu(arma::abs(arma::conv_to< arma::rowvec >::from(sub_mat.row(j)) - pot_row));
         
@@ -508,7 +508,7 @@ arma::mat SCALE(arma::mat data, bool mean_center = true, bool sd_scale = true) {
   
   arma::mat mat_out(data.n_rows, data.n_cols, arma::fill::zeros);
   
-  for (unsigned int i = 0; i < data.n_cols; i++) {
+  for (int i = 0; i < data.n_cols; i++) {
     
     arma::vec tmp_vec = arma::conv_to< arma::vec >::from(data.col(i));
     
