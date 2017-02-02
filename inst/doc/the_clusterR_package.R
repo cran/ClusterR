@@ -116,9 +116,11 @@ imageShow(new_im)
 
 ## ----fig.width = 5.0, fig.height = 5.0, echo = T, eval = T---------------
 
-opt = Optimal_Clusters_KMeans(im2, max_clusters = 10, plot_clusters = T, 
+opt = Optimal_Clusters_KMeans(im2, max_clusters = 10, plot_clusters = T,
                               
-                              verbose = F, criterion = 'distortion_fK', fK_threshold = 0.85)
+                              criterion = 'distortion_fK', fK_threshold = 0.85,
+                              
+                              initializer = 'optimal_init', tol_optimal_init = 0.2)
 
 
 ## ----fig.width = 3.0, fig.height = 3.0, echo = T, eval = T---------------

@@ -1,4 +1,11 @@
 
+## ClusterR 1.0.4
+
+I removed the warnings, which occured during compilation.
+I corrected the UBSAN memory errors which occured due to a mistake in the *check_medoids()* function of the *utils_rcpp.cpp* file.
+I also modified the *quantile_init_rcpp()* function of the *utils_rcpp.cpp* file to print a warning if duplicates are present in the initial centroid matrix.
+
+
 ## ClusterR 1.0.3
 
 * I updated the dissimilarity functions to accept data with missing values.
