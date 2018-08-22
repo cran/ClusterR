@@ -1,4 +1,9 @@
 
+## ClusterR 1.1.4
+
+I modified the ClusterR package to a cpp-header-only package to allow linking of cpp code between Rcpp packages. See the update of the README.md file (16-08-2018) for more information.
+
+
 ## ClusterR 1.1.3
 
 I updated the example section of the documentation by replacing the *optimal_init* with the *kmeans++* initializer
