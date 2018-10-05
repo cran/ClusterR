@@ -1,9 +1,8 @@
 
-
 ## ClusterR
 <br>
 
-The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans and k-medoids clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the package Documentation and Vignette.
+The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans and k-medoids clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the package Vignette and Documentation.
 <br><br>
 
 **UPDATE 16-08-2018**

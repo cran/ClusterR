@@ -1,7 +1,12 @@
 
+## ClusterR 1.1.5
+
+As of version 1.1.5 the ClusterR functions can take [tibble](https://tibble.tidyverse.org/) objects as input too.
+
+
 ## ClusterR 1.1.4
 
-I modified the ClusterR package to a cpp-header-only package to allow linking of cpp code between Rcpp packages. See the update of the README.md file (16-08-2018) for more information.
+I modified the ClusterR package to a cpp-header-only package to allow linking of cpp code between Rcpp packages. See the update of the README.md file (16-08-2018) and [issue #11](https://github.com/mlampros/ClusterR/issues/11) for more information.
 
 
 ## ClusterR 1.1.3
