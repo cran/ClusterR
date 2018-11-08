@@ -2,7 +2,7 @@
 ## ClusterR
 <br>
 
-The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans and k-medoids clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the package Vignette and Documentation.
+The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the package Documentation and Vignette.
 <br><br>
 
 **UPDATE 16-08-2018**
@@ -43,42 +43,27 @@ devtools::install_github('mlampros/ClusterR')
 
 <br>
 
-* **2nd.** update the **DESCRIPTION** file of 'PackageA' and especially the *Imports*, *Depends* and *LinkingTo* fields by adding the *ClusterR* package (besides any other packages),
+* **2nd.** update the **DESCRIPTION** file of 'PackageA' and especially the *LinkingTo* field by adding the *ClusterR* package (besides any other packages),
 
 <br>
 
 ```R
 
-Imports: ClusterR
-Depends: ClusterR
 LinkingTo: ClusterR
 
-
 ```
 
 <br>
 
-* **3rd.** update the **NAMESPACE** file of 'PackageA' by importing the *ClusterR* package (besides any other imports),
-
-<br>
-
-```R
-
-import(ClusterR)
-
-
-```
-
-<br>
-
-* **4th.** open a **new C++ file** (for instance in Rstudio) and at the top of the file add the following 'headers', 'depends' and 'plugins',
+* **3rd.** open a **new C++ file** (for instance in Rstudio) and at the top of the file add the following 'headers', 'depends' and 'plugins',
 
 <br>
 
 ```R
 
 # include <RcppArmadillo.h>
-#include <ClusterRHeader.h>
+# include <ClusterRHeader.h>
+# include <affinity_propagation.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::depends(ClusterR)]]
 // [[Rcpp::plugins(cpp11)]]
@@ -87,7 +72,7 @@ import(ClusterR)
 ```
 <br>
 
-The available functions can be found in the [ClusterRHeader.h](https://github.com/mlampros/ClusterR/blob/master/inst/include/ClusterRHeader.h) file.
+The available functions can be found in the following files: **inst/include/ClusterRHeader.h** and **inst/include/affinity_propagation.h**
 
 <br>
 
@@ -97,7 +82,8 @@ A *complete minimal example* would be :
 
 ```R
 # include <RcppArmadillo.h>
-#include <ClusterRHeader.h>
+# include <ClusterRHeader.h>
+# include <affinity_propagation.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::depends(ClusterR)]]
 // [[Rcpp::plugins(cpp11)]]
