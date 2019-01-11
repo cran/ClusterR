@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2018-12-09" />
+<meta name="date" content="2019-01-11" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author"><em>Lampros Mouselimis</em></h4>
-<h4 class="date"><em>2018-12-09</em></h4>
+<h4 class="date"><em>2019-01-11</em></h4>
 
 
 
@@ -258,7 +258,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.430194 secs</code></pre>
+<pre><code>## time to complete : 2.411311 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_init =<span class="st"> </span>km_init<span class="op">$</span>centroids
 
 getclust_init =<span class="st"> </span>km_init<span class="op">$</span>clusters
@@ -286,7 +286,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 0.8984232 secs</code></pre>
+<pre><code>## time to complete : 0.8593817 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_mb =<span class="st"> </span>km_mb<span class="op">$</span>centroids
 
 new_im_mb =<span class="st"> </span>getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span>
@@ -490,7 +490,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 3.254641 secs</code></pre>
+<pre><code>## time to complete : 3.315106 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -522,7 +522,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 16.0057 secs</code></pre>
+<pre><code>## time to complete : 17.31079 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>

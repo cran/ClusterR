@@ -1,6 +1,6 @@
-6c68d9e713c69f2eb8862a651bd3354b *DESCRIPTION
-4afdcfdb10a4d76df970472a55c1a4bd *NAMESPACE
-64427c481dc13788488c6217c427ba85 *NEWS.md
+71b1fd417dfa418d0de123fd457daa40 *DESCRIPTION
+0813b7c94e3ed7ab12410151f22c30b2 *NAMESPACE
+b8fe8974634ae417666b759f8ab1c8b7 *NEWS.md
 b683d50677117bbe70281a2a18bbb9ab *R/RcppExports.R
 ba3119bd629cc5c93f2bdb6d82b2862a *R/clustering_functions.R
 56e73e836b5226507b81572e411733f9 *README.md
@@ -10,7 +10,7 @@ aa58963ebd13c4c91edf809ca4efc5d4 *data/mushroom.rda
 a9e3dfd8650ed7d2d0a91d3880a67f7b *data/soybean.rda
 128fe5f74b8c6787e9c378b61bd8d423 *inst/doc/the_clusterR_package.R
 86f33097b23d7a5acc0c83647a19d865 *inst/doc/the_clusterR_package.Rmd
-311f0ac58451798262aa5e8257331476 *inst/doc/the_clusterR_package.html
+d9607e9cd63051210a1abd610033a2d7 *inst/doc/the_clusterR_package.html
 157e042d6a7e3ba930c3192f73fcad7e *inst/include/ClusterRHeader.h
 4bfe12409080d29ecad294bd8ff14e4f *inst/include/affinity_propagation.h
 2b20993e66e638d814eb8fcafb807fe5 *man/AP_affinity_propagation.Rd
