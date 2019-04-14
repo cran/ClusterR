@@ -12,14 +12,14 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2019-01-11" />
+<meta name="date" content="2019-04-14" />
 
 <title>Functionality of the ClusterR package</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author"><em>Lampros Mouselimis</em></h4>
-<h4 class="date"><em>2019-01-11</em></h4>
+<h4 class="date"><em>2019-04-14</em></h4>
 
 
 
@@ -258,7 +280,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 2.411311 secs</code></pre>
+<pre><code>## time to complete : 2.395184 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_init =<span class="st"> </span>km_init<span class="op">$</span>centroids
 
 getclust_init =<span class="st"> </span>km_init<span class="op">$</span>clusters
@@ -286,7 +308,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 0.8593817 secs</code></pre>
+<pre><code>## time to complete : 0.8507004 secs</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getcent_mb =<span class="st"> </span>km_mb<span class="op">$</span>centroids
 
 new_im_mb =<span class="st"> </span>getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span>
@@ -490,7 +512,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 3.315106 secs</code></pre>
+<pre><code>## time to complete : 3.347652 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -522,7 +544,7 @@ end =<span class="st"> </span><span class="kw">Sys.time</span>()
 t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start
   
 <span class="kw">cat</span>(<span class="st">'time to complete :'</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</code></pre></div>
-<pre><code>## time to complete : 17.31079 secs</code></pre>
+<pre><code>## time to complete : 17.0703 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>

@@ -1,4 +1,10 @@
 
+## ClusterR 1.1.9
+
+* I added parallelization for the *exact* method of the *AP_preferenceRange* function which is more computationally intensive as the *bound* method
+* I modified the *Optimal_Clusters_KMeans*, *Optimal_Clusters_GMM* and *Optimal_Clusters_Medoids* to accept also a contiguous or non-contiguous vector besides single values as a *max_clusters* parameter. However, the limitation currently is that the user won't be in place to plot the clusters but only to receive the ouput data ( this can be changed in the future however the plotting function for the contiguous and non-contiguous vectors must be a separate plotting function outside of the existing one).  Moreover, the *distortion_fK* criterion can't be computed in the *Optimal_Clusters_KMeans* function if the *max_clusters* parameter is a contiguous or non-continguous vector ( the *distortion_fK* criterion requires consecutive clusters ). The same applies also to the *Adjusted_Rsquared* criterion which returns incorrect output. For this feature request see the following [Github issue](https://github.com/mlampros/ClusterR/issues/15).
+
+
 ## ClusterR 1.1.8
 
 * I moved the *OpenImageR* dependency in the DESCRIPTION file from 'Imports' to 'Suggests', as it appears only in the Vignette file.
@@ -16,7 +22,7 @@
 * I modified the *Predict_mini_batch_kmeans()* function to accept an armadillo matrix rather than an Rcpp Numeric matrix. The function appers both in *ClusterRHeader.h* file ( 'inst' folder ) and in *export_inst_folder_headers.cpp* file ( 'src' folder )
 * I added the *mini_batch_params* parameter to the *Optimal_Clusters_KMeans* function. Now, the optimal number of clusters can be found also based on the min-batch-kmeans algorithm (except for the *variance_explained* criterion)
 * I changed the license from MIT to GPL-3
-* I added the [affinity propagation algorithm](https://www.psi.toronto.edu/index.php?q=affinity%20propagation) (conversion of the matlab files *apcluster.m* and *referenceRange.m*).
+* I added the *affinity propagation algorithm* (<span></span>www.psi.toronto.edu/index.php?q=affinity%20propagation). Especially, I converted the matlab files *apcluster.m* and *referenceRange.m*.
 * I modified the minimum version of RcppArmadillo in the DESCRIPTION file to 0.9.1 because the Affinity Propagation algorithm requires the *.is_symmetric()* function, which was included in version 0.9.1
 
 

@@ -166,7 +166,7 @@ tryCatch_optimal_clust_GMM <- function(data, max_clusters, dist_mode, seed_mode,
 #' Optimal number of Clusters for the gaussian mixture models
 #'
 #' @param data matrix or data frame
-#' @param max_clusters the maximum number of clusters
+#' @param max_clusters either a numeric value, a contiguous or non-continguous numeric vector specifying the cluster search space
 #' @param criterion one of 'AIC' or 'BIC'
 #' @param dist_mode the distance used during the seeding of initial means and k-means clustering. One of, \emph{eucl_dist}, \emph{maha_dist}.
 #' @param seed_mode how the initial means are seeded prior to running k-means and/or EM algorithms. One of, \emph{static_subset},\emph{random_subset},\emph{static_spread},\emph{random_spread}.
@@ -182,6 +182,9 @@ tryCatch_optimal_clust_GMM <- function(data, max_clusters, dist_mode, seed_mode,
 #' \strong{AIC}  : the Akaike information criterion
 #'
 #' \strong{BIC}  : the Bayesian information criterion
+#' 
+#' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
+#' 
 #' @export
 #' @examples
 #'
@@ -192,6 +195,15 @@ tryCatch_optimal_clust_GMM <- function(data, max_clusters, dist_mode, seed_mode,
 #' dat = center_scale(dat)
 #'
 #' opt_gmm = Optimal_Clusters_GMM(dat, 10, criterion = "AIC", plot_data = FALSE)
+#' 
+#' 
+#' #----------------------------
+#' # non-contiguous search space
+#' #----------------------------
+#'  
+#' search_space = c(2,5)
+#' 
+#' opt_gmm = Optimal_Clusters_GMM(dat, search_space, criterion = "AIC", plot_data = FALSE)
 #'
 
 
@@ -201,8 +213,10 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
   
   if ('data.frame' %in% class(data)) data = as.matrix(data)
   if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
-  if (plot_data && max_clusters < 2) stop('if plot_data is TRUE the max_clusters parameter should be at least 2')
-  if (!is.numeric(max_clusters)|| length(max_clusters) != 1 || max_clusters < 1) stop('max_clusters should be numeric and greater than 0')
+  if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
+  if (length(max_clusters) == 1) {
+    if (plot_data && max_clusters < 2) stop('if plot_data is TRUE the max_clusters parameter should be at least 2')
+  }
   if (!criterion %in% c("AIC", "BIC")) stop("supported criteria are 'AIC' or 'BIC'")
   if (!dist_mode %in% c('eucl_dist', 'maha_dist')) stop("available distance modes are 'eucl_dist' and 'maha_dist'")
   if (!seed_mode %in% c('static_subset','random_subset','static_spread','random_spread'))
@@ -212,13 +226,28 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
   if (!is.logical(verbose)) stop('the verbose parameter should be either TRUE or FALSE')
   if (var_floor < 0 ) stop('the var_floor parameter can not be negative')
   
-  if (ncol(data) < max_clusters && verbose) { warning("the number of columns of the data should be larger than 'max_clusters'", call. = F); cat(" ", '\n') }
+  if (length(max_clusters) != 1) {
+    plot_data = FALSE                       # set "plot_data" to FALSE if the "max_clusters" parameter is not of length 1
+    if (ncol(data) < max(max_clusters) && verbose) { warning("the number of columns of the data should be larger than the maximum value of 'max_clusters'", call. = F); cat(" ", '\n') }
+  }
+  else {
+    if (ncol(data) < max_clusters && verbose) { warning("the number of columns of the data should be larger than 'max_clusters'", call. = F); cat(" ", '\n') }
+  }
   
   flag_non_finite = check_NaN_Inf(data)
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
   
-  gmm = tryCatch_optimal_clust_GMM(data, max_clusters, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed)
+  if (length(max_clusters) == 1) {
+    pass_vector = 1:max_clusters}
+  else {
+    pass_vector = max_clusters
+  }
+  if (0 %in% pass_vector) {
+    stop("The 'max_clusters' vector can not include a 0 value !", call. = F)
+  }
+  
+  gmm = tryCatch_optimal_clust_GMM(data, pass_vector, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, criterion, seed)
   
   if ('Error' %in% names(gmm)) {
     
@@ -507,7 +536,7 @@ predict_KMeans = function(data, CENTROIDS) {
 #' Optimal number of Clusters for Kmeans or Mini-Batch-Kmeans
 #'
 #' @param data matrix or data frame
-#' @param max_clusters the maximum number of clusters
+#' @param max_clusters either a numeric value, a contiguous or non-continguous numeric vector specifying the cluster search space
 #' @param criterion one of \emph{variance_explained}, \emph{WCSSE}, \emph{dissimilarity}, \emph{silhouette}, \emph{distortion_fK}, \emph{AIC}, \emph{BIC} and \emph{Adjusted_Rsquared}. See details for more information.
 #' @param fK_threshold a float number used in the 'distortion_fK' criterion
 #' @param num_init number of times the algorithm will be run with different centroid seeds
@@ -554,6 +583,10 @@ predict_KMeans = function(data, CENTROIDS) {
 #' 
 #' If the \emph{mini_batch_params} parameter is not NULL then the optimal number of clusters will be found based on the Mini-batch-Kmeans algorithm, otherwise based on the Kmeans. The higher the \emph{init_fraction} 
 #' parameter is the more close the results between Mini-Batch-Kmeans and Kmeans will be.
+#' 
+#' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
+#' Moreover, the \emph{distortion_fK} criterion can't be computed if the \emph{max_clusters} parameter is a contiguous or non-continguous vector ( the \emph{distortion_fK} criterion requires consecutive clusters ).
+#' The same applies also to the \emph{Adjusted_Rsquared} criterion which returns incorrect output.
 #'
 #' @export
 #' @examples
@@ -572,7 +605,7 @@ predict_KMeans = function(data, CENTROIDS) {
 #' opt_km = Optimal_Clusters_KMeans(dat, max_clusters = 10, criterion = "distortion_fK",
 #' 
 #'                                  plot_clusters = FALSE)
-#'#'
+#'
 #' #------------------
 #' # mini-batch-kmeans
 #' #------------------
@@ -584,6 +617,19 @@ predict_KMeans = function(data, CENTROIDS) {
 #' 
 #'                                    plot_clusters = FALSE, mini_batch_params = params_mbkm)
 #'                                    
+#' 
+#' #----------------------------
+#' # non-contiguous search space
+#' #----------------------------
+#'  
+#' search_space = c(2,5)
+#' 
+#' opt_km = Optimal_Clusters_KMeans(dat, max_clusters = search_space, 
+#'                                  
+#'                                  criterion = "variance_explained",
+#' 
+#'                                  plot_clusters = FALSE)
+#'                                    
 
 
 Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_explained", fK_threshold = 0.85, num_init = 1, max_iters = 200,
@@ -594,7 +640,12 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
   
   if ('data.frame' %in% class(data)) data = as.matrix(data)
   if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
-  if (!is.numeric(max_clusters) || length(max_clusters) != 1 || max_clusters < 1) stop('max_clusters should be numeric and greater than 0')
+  if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
+  if (length(max_clusters) == 1) {
+    if (max_clusters < 1) {
+      stop('In case that max_clusters is of length 1 it should be greater than 0')
+    }
+  }
   if (!criterion %in% c('variance_explained', 'WCSSE', 'dissimilarity', 'silhouette', 'distortion_fK', 'AIC', 'BIC', 'Adjusted_Rsquared'))
     stop("available criteria are 'variance_explained', 'WCSSE', 'dissimilarity', 'silhouette', 'distortion_fK', 'AIC', 'BIC' and 'Adjusted_Rsquared'")
   if (num_init < 1) stop('the num_init parameter should be greater than 0')
@@ -614,15 +665,27 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
     }
   }
   
+  if (length(max_clusters) != 1) plot_clusters = FALSE                       # set "plot_clusters" to FALSE if the "max_clusters" parameter is not of length 1
+  
   flag_non_finite = check_NaN_Inf(data)
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
   
-  vec_out = rep(NA, max_clusters)
+  LEN_CLUST = ITER_CLUST = NA
+  if (length(max_clusters) == 1) {
+    LEN_CLUST = max_clusters
+    ITER_CLUST = 1:max_clusters}
+  else {
+    LEN_CLUST = length(max_clusters)
+    ITER_CLUST = max_clusters
+  }
   
-  if (verbose) { cat("", '\n'); pb = utils::txtProgressBar(min = 1, max = max_clusters, style = 3); cat("", '\n') }
+  vec_out = rep(NA, LEN_CLUST)
   
-  for (i in 1:max_clusters) {
+  if (verbose) { cat("", '\n'); pb = utils::txtProgressBar(min = 1, max = LEN_CLUST, style = 3); cat("", '\n') }
+  
+  COUNT = 1
+  for (i in ITER_CLUST) {
     
     if (is.null(mini_batch_params)) {
       
@@ -632,8 +695,8 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
     else {
       
       km = MiniBatchKmeans(data, i, mini_batch_params[["batch_size"]], num_init, max_iters, mini_batch_params[["init_fraction"]], initializer,
-                           
-                           mini_batch_params[["early_stop_iter"]], FALSE, NULL, tol, tol_optimal_init, seed)
+                                     
+                                     mini_batch_params[["early_stop_iter"]], FALSE, NULL, tol, tol_optimal_init, seed)
       
       tmp_cent = km$centroids
       km["centroids"] = NULL
@@ -649,12 +712,12 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
     
     if (criterion == "variance_explained") {
       
-      vec_out[i] = sum(na.omit(as.vector(km$WCSS_per_cluster))) / km$total_SSE
+      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster))) / km$total_SSE
     }
     
     if (criterion == "WCSSE") {
       
-      vec_out[i] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
+      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
     }
     
     if (criterion == "dissimilarity") {
@@ -663,14 +726,14 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
       
       tmp_dis = mean(na.omit(unlist(lapply(eval_km$INTRA_cluster_dissimilarity, mean))))
       
-      vec_out[i] = tmp_dis
+      vec_out[COUNT] = tmp_dis
     }
     
     if (criterion == "silhouette") {
       
       if (i == 1) {
         
-        vec_out[i] = 0.0}
+        vec_out[COUNT] = 0.0}
       
       else {
         
@@ -678,13 +741,13 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
         
         tmp_silh = mean(na.omit(unlist(lapply(eval_km$silhouette, mean))))
         
-        vec_out[i] = tmp_silh
+        vec_out[COUNT] = tmp_silh
       }
     }
     
     if (criterion == "distortion_fK") {
       
-      vec_out[i] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
+      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
     }
     
     if (criterion == "AIC") {                             # http://stackoverflow.com/questions/15839774/how-to-calculate-bic-for-k-means-clustering-in-r
@@ -695,7 +758,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
       
       D = sum(na.omit(km$WCSS_per_cluster))
       
-      vec_out[i] = D + 2.0 * m * k
+      vec_out[COUNT] = D + 2.0 * m * k
     }
     
     if (criterion == "BIC") {                             # http://stackoverflow.com/questions/15839774/how-to-calculate-bic-for-k-means-clustering-in-r
@@ -708,21 +771,29 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
       
       D = sum(na.omit(km$WCSS_per_cluster))
       
-      vec_out[i] = D + log(n) * m * k
+      vec_out[COUNT] = D + log(n) * m * k
     }
     
     if (criterion == 'Adjusted_Rsquared') {
       
-      vec_out[i] = sum(na.omit(km$WCSS_per_cluster))
+      vec_out[COUNT] = sum(na.omit(km$WCSS_per_cluster))
     }
     
-    if (verbose) { utils::setTxtProgressBar(pb, i) }
+    if (verbose) { utils::setTxtProgressBar(pb, COUNT) }
+    
+    COUNT = COUNT + 1
   }
+  
   if (verbose) { close(pb); cat("", '\n') }
   
   if (criterion == 'Adjusted_Rsquared') {                 # http://sherrytowers.com/2013/10/24/k-means-clustering/
     
-    vec_out = 1.0 - (vec_out * (nrow(data) - 1)) / (vec_out[1] * (nrow(data) - seq(1, max_clusters)))
+    if (length(max_clusters) != 1) {
+      vec_out = "The 'Adjusted_Rsquared' criterion doesn't return the correct output if the 'max_clusters' parameter is greater than 1"
+    }
+    else {
+      vec_out = 1.0 - (vec_out * (nrow(data) - 1)) / (vec_out[1] * (nrow(data) - ITER_CLUST))
+    }
   }
   
   if (criterion %in% c('variance_explained', 'WCSSE', 'dissimilarity', 'silhouette', 'AIC', 'BIC', 'Adjusted_Rsquared')) {
@@ -780,9 +851,14 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
   
   else {                                                              # "distortion_fK"
     
-    f_K = opt_clust_fK(vec_out, ncol(data), fK_threshold)
-    
-    fK_vec = as.vector(f_K$fK_evaluation)
+    if (length(max_clusters) != 1) {
+      fK_vec = "The 'distortion_fK' criterion can not be computed if the length of the 'max_clusters' parameter is greater than 1. See the details for more information!"
+    }
+    else {
+      f_K = opt_clust_fK(vec_out, ncol(data), fK_threshold)
+      
+      fK_vec = as.vector(f_K$fK_evaluation)
+    }
     
     if (plot_clusters) {
       
@@ -1211,7 +1287,7 @@ function_interactive = function(evaluation_objects, max_clusters, silhouette = F
 #' Optimal number of Clusters for the partitioning around Medoids functions
 #'
 #' @param data matrix or data.frame. If both clara_samples and clara_sample_size equal 0, then the data parameter can be also a dissimilarity matrix, where the main diagonal equals 0.0 and the number of rows equals the number of columns
-#' @param max_clusters the maximum number of clusters
+#' @param max_clusters either a numeric value, a contiguous or non-continguous numeric vector specifying the cluster search space
 #' @param distance_metric a string specifying the distance method. One of,  \emph{euclidean},  \emph{manhattan},  \emph{chebyshev},  \emph{canberra},  \emph{braycurtis},  \emph{pearson_correlation},  \emph{simple_matching_coefficient},  \emph{minkowski},  \emph{hamming},  \emph{jaccard_coefficient},  \emph{Rao_coefficient},  \emph{mahalanobis}
 #' @param criterion one of 'dissimilarity' or 'silhouette'
 #' @param clara_samples number of samples to draw from the data set in case of clustering large applications (clara)
@@ -1228,6 +1304,9 @@ function_interactive = function(evaluation_objects, max_clusters, silhouette = F
 #' In case of plot_clusters = TRUE, the first plot will be either a plot of dissimilarities or both dissimilarities and silhouette widths giving an indication of the optimal number
 #' of the clusters. Then, the user will be asked to give an optimal value for the number of the clusters and after that the second plot will appear with either the dissimilarities or the
 #' silhouette widths belonging to each cluster.
+#' 
+#' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
+#' 
 #' @export
 #' @examples
 #'
@@ -1237,6 +1316,16 @@ function_interactive = function(evaluation_objects, max_clusters, silhouette = F
 #' dat = soybean[, -ncol(soybean)]
 #'
 #' opt_md = Optimal_Clusters_Medoids(dat, 10, 'jaccard_coefficient', plot_clusters = FALSE)
+#' 
+#' 
+#' #----------------------------
+#' # non-contiguous search space
+#' #----------------------------
+#'  
+#' search_space = c(2,5)
+#' 
+#' opt_md = Optimal_Clusters_Medoids(dat, search_space, 'jaccard_coefficient', plot_clusters = FALSE)
+#' 
 #' }
 
 
@@ -1246,7 +1335,12 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
   
   if ('data.frame' %in% class(data)) data = as.matrix(data)
   if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
-  if (!is.numeric(max_clusters) || length(max_clusters) != 1 || max_clusters < 1) stop('max_clusters should be numeric and greater than 0')
+  if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
+  if (length(max_clusters) == 1) {
+    if (max_clusters < 1) {
+      stop('In case that max_clusters is of length 1 it should be greater than 0')
+    }
+  }
   if (!distance_metric %in% c("euclidean", "manhattan", "chebyshev", "canberra", "braycurtis", "pearson_correlation", "simple_matching_coefficient", "minkowski",
                               "hamming", "jaccard_coefficient", "Rao_coefficient", "mahalanobis"))
     stop("the distance_metric should be one of 'euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient',
@@ -1266,20 +1360,31 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
   if (clara_samples > 0 && clara_sample_size > 0.0 && sum(diag(data)) == 0.0 && nrow(data) == ncol(data))
     stop("a dissimilarity matrix is only allowed for the 'Cluster_Medoids' function")
   
+  if (length(max_clusters) != 1) plot_clusters = FALSE                       # set "plot_clusters" to FALSE if the "max_clusters" parameter is not of length 1
+  
   flag_non_finite = check_NaN_Inf(data)
   
   if (!flag_non_finite) stop("the data includes NaN's or +/- Inf values")
+  
+  if (length(max_clusters) == 1) {
+    pass_vector = 1:max_clusters}
+  else {
+    pass_vector = max_clusters
+  }
+  if (0 %in% pass_vector) {
+    stop("The 'max_clusters' vector can not include a 0 value !", call. = F)
+  }
   
   inter_bool = ifelse(criterion == "silhouette", TRUE, FALSE)
   
   if (clara_samples > 0 && clara_sample_size > 0.0) {
     
-    opt_cl =  OptClust(data, max_clusters, distance_metric, TRUE, clara_samples, clara_sample_size, minkowski_p, criterion, threads, swap_phase, verbose, seed)        # Clara_Medoids
+    opt_cl =  OptClust(data, pass_vector, distance_metric, TRUE, clara_samples, clara_sample_size, minkowski_p, criterion, threads, swap_phase, verbose, seed)        # Clara_Medoids
   }
   
   else {
     
-    opt_cl =  OptClust(data, max_clusters, distance_metric, FALSE, clara_samples, clara_sample_size, minkowski_p, criterion, threads, swap_phase, verbose, seed)        # Cluster_Medoids
+    opt_cl =  OptClust(data, pass_vector, distance_metric, FALSE, clara_samples, clara_sample_size, minkowski_p, criterion, threads, swap_phase, verbose, seed)        # Cluster_Medoids
   }
   
   if (plot_clusters) {
@@ -2150,6 +2255,7 @@ AP_affinity_propagation = function(data, p, maxits = 1000, convits = 100, dampfa
 #'
 #' @param data a matrix. Either a similarity matrix (where number of rows equal to number of columns) or a 3-dimensional matrix where the 1st, 2nd and 3rd column correspond to (i-index, j-index, value) triplet of a similarity matrix.
 #' @param method a character string specifying the preference range method to use. One of 'exact', 'bound'. See the details section for more information.
+#' @param threads an integer specifying the number of cores to run in parallel ( applies only if \emph{method} is set to 'exact' which is more computationally intensive )
 #' @export
 #' @details 
 #' 
@@ -2180,11 +2286,11 @@ AP_affinity_propagation = function(data, p, maxits = 1000, convits = 100, dampfa
 #'
 
 
-AP_preferenceRange = function(data, method = "bound") {
+AP_preferenceRange = function(data, method = "bound", threads = 1) {
   
   if (!inherits(data, "matrix")) stop("The 'data' parameter should be a matrix!", call. = F)
   if (!method %in% c("bound", "exact")) stop("The 'method' parameter should be either 'bound' or 'exact'!", call. = F)
   
-  return(preferenceRange(data, method))
+  return(preferenceRange(data, method, threads))
 }
 

@@ -13,7 +13,7 @@ Optimal_Clusters_KMeans(data, max_clusters,
 \arguments{
 \item{data}{matrix or data frame}
 
-\item{max_clusters}{the maximum number of clusters}
+\item{max_clusters}{either a numeric value, a contiguous or non-continguous numeric vector specifying the cluster search space}
 
 \item{criterion}{one of \emph{variance_explained}, \emph{WCSSE}, \emph{dissimilarity}, \emph{silhouette}, \emph{distortion_fK}, \emph{AIC}, \emph{BIC} and \emph{Adjusted_Rsquared}. See details for more information.}
 
@@ -76,6 +76,10 @@ Optimal number of Clusters for Kmeans or Mini-Batch-Kmeans
 
 If the \emph{mini_batch_params} parameter is not NULL then the optimal number of clusters will be found based on the Mini-batch-Kmeans algorithm, otherwise based on the Kmeans. The higher the \emph{init_fraction} 
 parameter is the more close the results between Mini-Batch-Kmeans and Kmeans will be.
+
+In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
+Moreover, the \emph{distortion_fK} criterion can't be computed if the \emph{max_clusters} parameter is a contiguous or non-continguous vector ( the \emph{distortion_fK} criterion requires consecutive clusters ).
+The same applies also to the \emph{Adjusted_Rsquared} criterion which returns incorrect output.
 }
 \examples{
 
@@ -93,7 +97,7 @@ dat = center_scale(dat)
 opt_km = Optimal_Clusters_KMeans(dat, max_clusters = 10, criterion = "distortion_fK",
 
                                  plot_clusters = FALSE)
-#'
+
 #------------------
 # mini-batch-kmeans
 #------------------
@@ -104,6 +108,19 @@ params_mbkm = list(batch_size = 10, init_fraction = 0.3, early_stop_iter = 10)
 opt_mbkm = Optimal_Clusters_KMeans(dat, max_clusters = 10, criterion = "distortion_fK",
 
                                    plot_clusters = FALSE, mini_batch_params = params_mbkm)
+                                   
+
+#----------------------------
+# non-contiguous search space
+#----------------------------
+ 
+search_space = c(2,5)
+
+opt_km = Optimal_Clusters_KMeans(dat, max_clusters = search_space, 
+                                 
+                                 criterion = "variance_explained",
+
+                                 plot_clusters = FALSE)
                                    
 }
 \author{
