@@ -61,7 +61,7 @@ tryCatch_GMM <- function(data, gaussian_comps, dist_mode, seed_mode, km_iter, em
 GMM = function(data, gaussian_comps = 1, dist_mode = 'eucl_dist', seed_mode = 'random_subset', km_iter = 10, em_iter = 5, verbose = FALSE, var_floor = 1e-10, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (gaussian_comps < 1) stop('the number of gaussian mixture components should be greater than 0')
   if (!dist_mode %in% c('eucl_dist', 'maha_dist')) stop("available distance modes are 'eucl_dist' and 'maha_dist'")
   if (!seed_mode %in% c('static_subset','random_subset','static_spread','random_spread')) stop("available seed modes are 'static_subset','random_subset','static_spread' and 'random_spread'")
@@ -118,14 +118,14 @@ GMM = function(data, gaussian_comps = 1, dist_mode = 'eucl_dist', seed_mode = 'r
 predict_GMM = function(data, CENTROIDS, COVARIANCE, WEIGHTS) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if ('data.frame' %in% class(CENTROIDS)) CENTROIDS = as.matrix(CENTROIDS)
-  if (class(CENTROIDS) != 'matrix') stop('CENTROIDS should be either a matrix or a data frame')
+  if (!inherits(CENTROIDS, 'matrix')) stop('CENTROIDS should be either a matrix or a data frame')
   if ('data.frame' %in% class(COVARIANCE)) COVARIANCE = as.matrix(COVARIANCE)
-  if (class(COVARIANCE) != 'matrix') stop('COVARIANCE should be either a matrix or a data frame')
+  if (!inherits(COVARIANCE, 'matrix')) stop('COVARIANCE should be either a matrix or a data frame')
   if (ncol(data) != ncol(CENTROIDS) || ncol(data) != ncol(COVARIANCE) || length(WEIGHTS) != nrow(CENTROIDS) || length(WEIGHTS) != nrow(COVARIANCE))
     stop('the number of columns of the data, CENTROIDS and COVARIANCE should match and the number of rows of the CENTROIDS AND COVARIANCE should be equal to the length of the WEIGHTS vector')
-  if (class(WEIGHTS) != 'numeric' || !is.vector(WEIGHTS))
+  if (!inherits(WEIGHTS, 'numeric') || !is.vector(WEIGHTS))
     stop('WEIGHTS should be a numeric vector')
 
   flag_non_finite = check_NaN_Inf(data)
@@ -185,6 +185,13 @@ tryCatch_optimal_clust_GMM <- function(data, max_clusters, dist_mode, seed_mode,
 #'
 #' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
 #'
+#' @importFrom grDevices dev.cur
+#' @importFrom grDevices dev.off
+#' @importFrom graphics plot
+#' @importFrom graphics axis
+#' @importFrom graphics abline
+#' @importFrom graphics text
+#'
 #' @export
 #' @examples
 #'
@@ -212,7 +219,7 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
                                 km_iter = 10, em_iter = 5, verbose = FALSE, var_floor = 1e-10, plot_data = TRUE, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
   if (length(max_clusters) == 1) {
     if (plot_data && max_clusters < 2) stop('if plot_data is TRUE the max_clusters parameter should be at least 2')
@@ -257,14 +264,14 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
 
     if (plot_data) {
 
-      if (dev.cur() != 1) {
+      if (grDevices::dev.cur() != 1) {
 
-        dev.off()                          # reset par()
+        grDevices::dev.off()                          # reset par()
       }
 
       vec_out = as.vector(gmm)
 
-      tmp_VAL = as.vector(na.omit(vec_out))
+      tmp_VAL = as.vector(stats::na.omit(vec_out))
 
       if (length(which(is.na(vec_out))) > 0) {
 
@@ -281,17 +288,17 @@ Optimal_Clusters_GMM = function(data, max_clusters, criterion = "AIC", dist_mode
 
       y_MAX = max(tmp_VAL)
 
-      plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
+      graphics::plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
 
-      axis(1, at = seq(1, length(vec_out) , by = 1))
+      graphics::axis(1, at = seq(1, length(vec_out) , by = 1))
 
-      axis(2, at = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), las = 1, cex.axis = 0.8)
+      graphics::axis(2, at = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), las = 1, cex.axis = 0.8)
 
-      abline(h = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), v = seq(1, length(vec_out) , by = 1),
+      graphics::abline(h = seq(round(min(tmp_VAL) - round(summary(y_MAX)[['Max.']]) / 10), y_MAX + round(summary(y_MAX)[['Max.']]) / 10, by = round((summary(tmp_VAL)['Max.'] - summary(tmp_VAL)['Min.']) / 5)), v = seq(1, length(vec_out) , by = 1),
 
              col = "gray", lty = 3)
 
-      text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
+      graphics::text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
     }
 
     res = as.vector(gmm)
@@ -365,7 +372,7 @@ tryCatch_KMEANS_arma <- function(data, clusters, n_iter, verbose, seed_mode, CEN
 KMeans_arma = function(data, clusters, n_iter = 10, seed_mode = "random_subset", verbose = FALSE, CENTROIDS = NULL, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.numeric(clusters) || length(clusters) != 1 || clusters < 1) stop('clusters should be numeric and greater than 0')
   if (n_iter < 0) stop('the n_iter parameter can not be negative')
   if (!seed_mode %in% c('keep_existing','static_subset','random_subset','static_spread','random_spread'))
@@ -373,7 +380,7 @@ KMeans_arma = function(data, clusters, n_iter = 10, seed_mode = "random_subset",
   if ((seed_mode == 'keep_existing' && is.null(CENTROIDS)) || (seed_mode != 'keep_existing' && !is.null(CENTROIDS)))
     stop('the keep_existing seed_mode should be used when CENTROIDS is not NULL')
   if (!is.logical(verbose)) stop('the verbose parameter should be either TRUE or FALSE')
-  if (!is.null(CENTROIDS) && (class(CENTROIDS) != 'matrix' || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
+  if (!is.null(CENTROIDS) && (!inherits(CENTROIDS, 'matrix') || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
     stop('CENTROIDS should be a matrix with number of rows equal to the number of clusters and number of columns equal to the number of columns of the data')
 
   flag_non_finite = check_NaN_Inf(data)
@@ -414,8 +421,6 @@ KMeans_arma = function(data, clusters, n_iter = 10, seed_mode = "random_subset",
 #' @details
 #' This function has the following features in comparison to the KMeans_arma function:
 #'
-#' It allows for multiple initializations (which can be parallelized if Openmp is available).
-#'
 #' Besides optimal_init, quantile_init, random and kmeans++ initilizations one can specify the centroids using the CENTROIDS parameter.
 #'
 #' The running time and convergence of the algorithm can be adjusted using the num_init, max_iters and tol parameters.
@@ -451,14 +456,14 @@ KMeans_rcpp = function(data, clusters, num_init = 1, max_iters = 100, initialize
                        verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.3, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.numeric(clusters) || length(clusters) != 1 || clusters < 1) stop('clusters should be numeric and greater than 0')
   if (num_init < 1) stop('the num_init parameter should be greater than 0')
   if (max_iters < 1) stop('the max_iters parameter should be greater than 0')
   if (!initializer %in% c('kmeans++', 'random', 'optimal_init', 'quantile_init')) stop("available initializer methods are 'kmeans++', 'random', 'optimal_init' and 'quantile_init'")
   if (!is.logical(fuzzy)) stop('the fuzzy parameter should be either TRUE or FALSE')
   if (!is.logical(verbose)) stop('the verbose parameter should be either TRUE or FALSE')
-  if (!is.null(CENTROIDS) && (class(CENTROIDS) != 'matrix' || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
+  if (!is.null(CENTROIDS) && (!inherits(CENTROIDS, 'matrix') || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
     stop('CENTROIDS should be a matrix with number of rows equal to the number of clusters and number of columns equal to the number of columns of the data')
   if (tol <= 0.0) stop('tol should be a float number greater than 0.0')
   if (tol_optimal_init <= 0.0) stop('tol_optimal_init should be a float number greater than 0.0')
@@ -515,7 +520,7 @@ KMeans_rcpp = function(data, clusters, num_init = 1, max_iters = 100, initialize
 predict_KMeans = function(data, CENTROIDS) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.matrix(CENTROIDS)) stop("CENTROIDS should be a matrix")
   if (ncol(data) != ncol(CENTROIDS))
     stop('the number of columns of the data should match the number of columns of the CENTROIDS ')
@@ -588,6 +593,12 @@ predict_KMeans = function(data, CENTROIDS) {
 #' Moreover, the \emph{distortion_fK} criterion can't be computed if the \emph{max_clusters} parameter is a contiguous or non-continguous vector ( the \emph{distortion_fK} criterion requires consecutive clusters ).
 #' The same applies also to the \emph{Adjusted_Rsquared} criterion which returns incorrect output.
 #'
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
+#' @importFrom graphics par
+#' @importFrom graphics mtext
+#' @importFrom stats na.omit
+#'
 #' @export
 #' @examples
 #'
@@ -639,7 +650,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
                                    seed = 1, mini_batch_params = NULL) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
   if (length(max_clusters) == 1) {
     if (max_clusters < 1) {
@@ -712,19 +723,19 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
     if (criterion == "variance_explained") {
 
-      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster))) / km$total_SSE
+      vec_out[COUNT] = sum(stats::na.omit(as.vector(km$WCSS_per_cluster))) / km$total_SSE
     }
 
     if (criterion == "WCSSE") {
 
-      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
+      vec_out[COUNT] = sum(stats::na.omit(as.vector(km$WCSS_per_cluster)))
     }
 
     if (criterion == "dissimilarity") {
 
       eval_km = evaluation_rcpp(data, as.vector(km$clusters), FALSE)
 
-      tmp_dis = mean(na.omit(unlist(lapply(eval_km$INTRA_cluster_dissimilarity, mean))))
+      tmp_dis = mean(stats::na.omit(unlist(lapply(eval_km$INTRA_cluster_dissimilarity, mean))))
 
       vec_out[COUNT] = tmp_dis
     }
@@ -739,7 +750,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
         eval_km = evaluation_rcpp(data, as.vector(km$clusters), TRUE)
 
-        tmp_silh = mean(na.omit(unlist(lapply(eval_km$silhouette, mean))))
+        tmp_silh = mean(stats::na.omit(unlist(lapply(eval_km$silhouette, mean))))
 
         vec_out[COUNT] = tmp_silh
       }
@@ -747,7 +758,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
     if (criterion == "distortion_fK") {
 
-      vec_out[COUNT] = sum(na.omit(as.vector(km$WCSS_per_cluster)))
+      vec_out[COUNT] = sum(stats::na.omit(as.vector(km$WCSS_per_cluster)))
     }
 
     if (criterion == "AIC") {                             # http://stackoverflow.com/questions/15839774/how-to-calculate-bic-for-k-means-clustering-in-r
@@ -756,7 +767,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
       k = nrow(km$centers)
 
-      D = sum(na.omit(km$WCSS_per_cluster))
+      D = sum(stats::na.omit(km$WCSS_per_cluster))
 
       vec_out[COUNT] = D + 2.0 * m * k
     }
@@ -769,14 +780,14 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
       n = length(km$clusters)
 
-      D = sum(na.omit(km$WCSS_per_cluster))
+      D = sum(stats::na.omit(km$WCSS_per_cluster))
 
       vec_out[COUNT] = D + log(n) * m * k
     }
 
     if (criterion == 'Adjusted_Rsquared') {
 
-      vec_out[COUNT] = sum(na.omit(km$WCSS_per_cluster))
+      vec_out[COUNT] = sum(stats::na.omit(km$WCSS_per_cluster))
     }
 
     if (verbose) { utils::setTxtProgressBar(pb, COUNT) }
@@ -800,7 +811,7 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
     if (plot_clusters) {
 
-      tmp_VAL = as.vector(na.omit(vec_out))
+      tmp_VAL = as.vector(stats::na.omit(vec_out))
 
       if (length(which(is.na(vec_out))) > 0) {
 
@@ -817,15 +828,15 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
       y_MAX = max(tmp_VAL)
 
-      plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
+      graphics::plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'blue', lty = 3, axes = FALSE)
 
-      axis(1, at = seq(1, length(vec_out) , by = 1))
+      graphics::axis(1, at = seq(1, length(vec_out) , by = 1))
 
       if (criterion == 'silhouette') {
 
-        axis(2, at = seq(0, y_MAX + 0.05, by = 0.05 ), las = 1, cex.axis = 0.8)
+        graphics::axis(2, at = seq(0, y_MAX + 0.05, by = 0.05 ), las = 1, cex.axis = 0.8)
 
-        abline(h = seq(0.0, max(as.vector(na.omit(vec_out))), 0.05), v = seq(1, length(vec_out) , by = 1), col = "gray", lty = 3)}
+        graphics::abline(h = seq(0.0, max(as.vector(stats::na.omit(vec_out))), 0.05), v = seq(1, length(vec_out) , by = 1), col = "gray", lty = 3)}
 
       else {
 
@@ -833,18 +844,18 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
 
         out_max_summary = ifelse(tmp_summary == 0, 1, tmp_summary)
 
-        axis(2, at = seq(0, y_MAX + out_max_summary / 10, by = out_max_summary / 10), las = 1, cex.axis = 0.8)
+        graphics::axis(2, at = seq(0, y_MAX + out_max_summary / 10, by = out_max_summary / 10), las = 1, cex.axis = 0.8)
 
-        abline(h = seq(0.0, max(as.vector(na.omit(vec_out))), out_max_summary / 10), v = seq(1, length(vec_out) , by = 1), col = "gray", lty = 3)
+        graphics::abline(h = seq(0.0, max(as.vector(stats::na.omit(vec_out))), out_max_summary / 10), v = seq(1, length(vec_out) , by = 1), col = "gray", lty = 3)
       }
 
       if (criterion %in% c("variance_explained", "Adjusted_Rsquared", "dissimilarity", "silhouette")) {
 
-        text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 2), cex = 0.8, font = 2) }
+        graphics::text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 2), cex = 0.8, font = 2) }
 
       else {
 
-        text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
+        graphics::text(x = 1:length(vec_out), y = vec_out, labels = round(vec_out, 1), cex = 0.8, font = 2)
       }
     }
   }
@@ -875,21 +886,21 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
         y_fk = fK_vec
       }
 
-      par(oma = c(0, 2, 0, 0))
+      graphics::par(oma = c(0, 2, 0, 0))
 
-      plot(y_fk, type = 'l', xlab = 'clusters', ylab = 'f(K)', col = 'green', axes = FALSE)
+      graphics::plot(y_fk, type = 'l', xlab = 'clusters', ylab = 'f(K)', col = 'green', axes = FALSE)
 
-      axis(1, at = x_fk)
+      graphics::axis(1, at = x_fk)
 
-      axis(2, at = seq(0, max(y_fk) + 0.1, by = round(summary(y_fk)[['Max.']]) / 10), las = 1, cex.axis = 0.8)
+      graphics::axis(2, at = seq(0, max(y_fk) + 0.1, by = round(summary(y_fk)[['Max.']]) / 10), las = 1, cex.axis = 0.8)
 
-      abline(h = seq(0.0, max(y_fk), round(summary(y_fk)[['Max.']]) / 10), v = seq(1, length(y_fk) , by = 1), col = "gray", lty = 3)
+      graphics::abline(h = seq(0.0, max(y_fk), round(summary(y_fk)[['Max.']]) / 10), v = seq(1, length(y_fk) , by = 1), col = "gray", lty = 3)
 
-      abline(h = fK_threshold, col = 'blue', lty = 3)
+      graphics::abline(h = fK_threshold, col = 'blue', lty = 3)
 
-      mtext("threshold", side = 2, line = 2, at = fK_threshold, las = 1, cex = 0.9)
+      graphics::mtext("threshold", side = 2, line = 2, at = fK_threshold, las = 1, cex = 0.9)
 
-      text(x = x_fk, y = y_fk, labels = round(y_fk,2), cex = 0.8, font = 2)
+      graphics::text(x = x_fk, y = y_fk, labels = round(y_fk,2), cex = 0.8, font = 2)
     }
   }
 
@@ -960,7 +971,7 @@ MiniBatchKmeans = function(data, clusters, batch_size = 10, num_init = 1, max_it
                            early_stop_iter = 10, verbose = FALSE, CENTROIDS = NULL, tol = 1e-4, tol_optimal_init = 0.3, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.numeric(clusters) || length(clusters) != 1 || clusters < 1) stop('clusters should be numeric and greater than 0')
   if (batch_size < 1) stop('batch_size should be greater than 0')
   if (num_init < 1) stop('the num_init parameter should be greater than 0')
@@ -969,7 +980,7 @@ MiniBatchKmeans = function(data, clusters, batch_size = 10, num_init = 1, max_it
   if (!initializer %in% c('kmeans++', 'random', 'optimal_init', 'quantile_init')) stop("available initializer methods are 'kmeans++', 'random', 'optimal_init' and 'quantile_init'")
   if (early_stop_iter < 1) stop('early_stop_iter should be greater than 0')
   if (!is.logical(verbose)) stop('the verbose parameter should be either TRUE or FALSE')
-  if (!is.null(CENTROIDS) && (class(CENTROIDS) != 'matrix' || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
+  if (!is.null(CENTROIDS) && (!inherits(CENTROIDS, 'matrix') || nrow(CENTROIDS) != clusters || ncol(CENTROIDS) != ncol(data)))
     stop('CENTROIDS should be a matrix with number of rows equal to the number of clusters and number of columns equal to the number of columns of the data')
   if (tol <= 0.0) stop('tol should be a float number greater than 0.0')
   if (tol_optimal_init <= 0.0) stop('tol_optimal_init should be a float number greater than 0.0')
@@ -1015,8 +1026,8 @@ MiniBatchKmeans = function(data, clusters, batch_size = 10, num_init = 1, max_it
 predict_MBatchKMeans = function(data, CENTROIDS, fuzzy = FALSE) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
-  if (class(CENTROIDS) != 'matrix') stop('CENTROIDS should be a matrix')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
+  if (!inherits(CENTROIDS, 'matrix')) stop('CENTROIDS should be a matrix')
   if (!(ncol(data) == ncol(CENTROIDS)))
     stop('the number of columns of the data should match the number of columns of the CENTROIDS ')
   if (!is.logical(fuzzy)) stop('fuzzy should be either TRUE or FALSE')
@@ -1077,7 +1088,7 @@ predict_MBatchKMeans = function(data, CENTROIDS, fuzzy = FALSE) {
 Cluster_Medoids = function(data, clusters, distance_metric = 'euclidean', minkowski_p = 1.0, threads = 1, swap_phase = TRUE, fuzzy = FALSE, verbose = FALSE, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame or a dissimilarity matrix with equal number of rows and columns and a diagonal equal to 0.0')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame or a dissimilarity matrix with equal number of rows and columns and a diagonal equal to 0.0')
   if (!is.numeric(clusters) || length(clusters) != 1 || clusters < 1) stop('clusters should be numeric and greater than 0')
   if (!distance_metric %in% c("euclidean", "manhattan", "chebyshev", "canberra", "braycurtis", "pearson_correlation", "simple_matching_coefficient", "minkowski",
                               "hamming", "jaccard_coefficient", "Rao_coefficient", "mahalanobis", "cosine"))
@@ -1166,7 +1177,7 @@ Cluster_Medoids = function(data, clusters, distance_metric = 'euclidean', minkow
 Clara_Medoids = function(data, clusters, samples, sample_size, distance_metric = "euclidean", minkowski_p = 1.0, threads = 1, swap_phase = TRUE, fuzzy = FALSE, verbose = FALSE, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.numeric(clusters) || length(clusters) != 1 || clusters < 1) stop('clusters should be numeric and greater than 0')
   if (!is.numeric(samples) || length(samples) != 1 || samples < 1) stop("samples should be a numeric value greater than 0")
   if (!is.numeric(sample_size) || sample_size <= 0.0 || sample_size > 1.0 ) stop("sample_size should be a numeric value greater than 0.0 and less than or equal to 1.0")
@@ -1240,7 +1251,7 @@ Clara_Medoids = function(data, clusters, samples, sample_size, distance_metric =
 predict_Medoids = function(data, MEDOIDS = NULL, distance_metric = 'euclidean', fuzzy = FALSE, minkowski_p = 1.0, threads = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if ('data.frame' %in% class(MEDOIDS)) MEDOIDS = as.matrix(MEDOIDS)
   if (is.null(MEDOIDS)) stop('the MEDOIDS should be a non-empty matrix or data frame')
   if (ncol(MEDOIDS) != ncol(data)) stop('the MEDOIDS columns should be equal to the number of columns of the data')
@@ -1307,6 +1318,9 @@ function_interactive = function(evaluation_objects, max_clusters, silhouette = F
 #'
 #' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
 #'
+#' @importFrom graphics legend
+#' @importFrom graphics lines
+#'
 #' @export
 #' @examples
 #'
@@ -1334,7 +1348,7 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
                                     minkowski_p = 1.0, swap_phase = TRUE, threads = 1, verbose = FALSE, plot_clusters = TRUE, seed = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!inherits(max_clusters, c('numeric', 'integer'))) stop('max_clusters should be a numeric or integer vector')
   if (length(max_clusters) == 1) {
     if (max_clusters < 1) {
@@ -1389,9 +1403,9 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
 
   if (plot_clusters) {
 
-    if (dev.cur() != 1) {
+    if (grDevices::dev.cur() != 1) {
 
-      dev.off()                          # reset par()
+      grDevices::dev.off()                          # reset par()
     }
 
     if (criterion == "dissimilarity") {
@@ -1400,11 +1414,11 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
 
       for (i in 2:max_clusters) { tmp_dis[i] = opt_cl[[i]]$avg_intra_clust_dissimilarity }
 
-      SUM_dis = sum(na.omit(tmp_dis))
+      SUM_dis = sum(stats::na.omit(tmp_dis))
 
       for (i in 2:max_clusters) { tmp_dis[i] = tmp_dis[i] / SUM_dis }           # the dissimilarities are divided by the sum, so that they are in the range 0 to 1
 
-      tmp_VAL = as.vector(na.omit(tmp_dis))
+      tmp_VAL = as.vector(stats::na.omit(tmp_dis))
 
       if (length(which(is.na(tmp_dis))) > 0) {
 
@@ -1419,17 +1433,17 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
         y_dis = tmp_dis
       }
 
-      plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'red', xaxp = c(1, 10, 10), axes = FALSE)
+      graphics::plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylab = criterion, col = 'red', xaxp = c(1, 10, 10), axes = FALSE)
 
-      axis(1, at = seq(1, length(tmp_dis) , by = 1))
+      graphics::axis(1, at = seq(1, length(tmp_dis) , by = 1))
 
-      axis(2, at = round(seq(0, max(tmp_VAL) + max(tmp_VAL)/10 , by = 0.01), 2))
+      graphics::axis(2, at = round(seq(0, max(tmp_VAL) + max(tmp_VAL)/10 , by = 0.01), 2))
 
-      abline(h = seq(0.0, max(tmp_VAL) + max(tmp_VAL)/10, 0.1), v = seq(1, length(tmp_dis) , by = 1), col = "gray", lty = 3)
+      graphics::abline(h = seq(0.0, max(tmp_VAL) + max(tmp_VAL)/10, 0.1), v = seq(1, length(tmp_dis) , by = 1), col = "gray", lty = 3)
 
-      text(x = x_dis, y = y_dis, labels = round(y_dis, 3), cex = 0.8)
+      graphics::text(x = x_dis, y = y_dis, labels = round(y_dis, 3), cex = 0.8)
 
-      legend("topright", legend = 'avg. dissimilarity', col = "red", lty = 1, text.font = 1)
+      graphics::legend("topright", legend = 'avg. dissimilarity', col = "red", lty = 1, text.font = 1)
 
 
       # consecutive plots [ the 'tryCatch' function is necessary otherwise it raises an error of the type : "Error in plot.new() : figure margins too large" ]
@@ -1453,7 +1467,7 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
 
       for (i in 2:max_clusters) { tmp_dis[i] = opt_cl[[i]]$avg_intra_clust_dissimilarity }
 
-      SUM_dis = sum(na.omit(tmp_dis))
+      SUM_dis = sum(stats::na.omit(tmp_dis))
 
       for (i in 2:max_clusters) { tmp_dis[i] = tmp_dis[i] / SUM_dis }            # the dissimilarities are divided by the sum, so that they are in the range 0 to 1
 
@@ -1474,7 +1488,7 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
 
       for (i in 2:max_clusters) { tmp_silh[i] = opt_cl[[i]]$avg_width_silhouette }
 
-      SUM_sil = sum(na.omit(tmp_silh))
+      SUM_sil = sum(stats::na.omit(tmp_silh))
 
       for (i in 2:max_clusters) { tmp_silh[i] = tmp_silh[i] / SUM_sil }             # the silhoutte widths are divided by the sum, so that they are in the range 0 to 1
 
@@ -1491,27 +1505,27 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
         y_sil = tmp_silh
       }
 
-      tmp_VAL_ALL = as.vector(na.omit(c(tmp_dis, tmp_silh)))
+      tmp_VAL_ALL = as.vector(stats::na.omit(c(tmp_dis, tmp_silh)))
 
       y_MIN = min(tmp_VAL_ALL)
 
       y_MAX = max(tmp_VAL_ALL)
 
-      plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylim = c(y_MIN, y_MAX), col = 'red', ylab = 'dissimilarity -- silhouette', axes = FALSE)
+      graphics::plot(x = x_dis, y = y_dis, type = 'l', xlab = 'clusters', ylim = c(y_MIN, y_MAX), col = 'red', ylab = 'dissimilarity -- silhouette', axes = FALSE)
 
-      axis(1, at = seq(1, length(tmp_dis) , by = 1))
+      graphics::axis(1, at = seq(1, length(tmp_dis) , by = 1))
 
-      axis(2, at = round(seq(y_MIN, y_MAX + y_MAX/10 , by = 0.01), 2))
+      graphics::axis(2, at = round(seq(y_MIN, y_MAX + y_MAX/10 , by = 0.01), 2))
 
-      abline(h = seq(0.0, y_MAX + y_MAX/10, 0.05), v = seq(1, length(tmp_dis) , by = 1), col = "gray", lty = 3)
+      graphics::abline(h = seq(0.0, y_MAX + y_MAX/10, 0.05), v = seq(1, length(tmp_dis) , by = 1), col = "gray", lty = 3)
 
-      text(x = x_dis, y = y_dis, labels = round(y_dis,3), cex = 0.8)
+      graphics::text(x = x_dis, y = y_dis, labels = round(y_dis,3), cex = 0.8)
 
-      lines(x = x_sil[1:length(x_sil)], y = y_sil[1:length(y_sil)], type = 'l', col = 'blue')
+      graphics::lines(x = x_sil[1:length(x_sil)], y = y_sil[1:length(y_sil)], type = 'l', col = 'blue')
 
-      text(x = x_sil[1:length(x_sil)], y = y_sil[1:length(y_sil)], labels = round(y_sil[1:length(y_sil)],3), cex = 0.8)
+      graphics::text(x = x_sil[1:length(x_sil)], y = y_sil[1:length(y_sil)], labels = round(y_sil[1:length(y_sil)],3), cex = 0.8)
 
-      legend("topright", legend = c('avg. dissimilarity', 'avg. silhouette width'), col = c("red","blue"), lty = 1, text.font = 1)
+      graphics::legend("topright", legend = c('avg. dissimilarity', 'avg. silhouette width'), col = c("red","blue"), lty = 1, text.font = 1)
 
 
       # consecutive plots [ the 'tryCatch' function is necessary otherwise it raises an error of the type : "Error in plot.new() : figure margins too large" ]
@@ -1546,6 +1560,11 @@ Optimal_Clusters_Medoids = function(data, max_clusters, distance_metric, criteri
 #' @details
 #' This function takes the result-object of the \emph{Cluster_Medoids} or \emph{Clara_Medoids} function and depending on the argument \emph{silhouette} it plots either the dissimilarities or
 #' the silhouette widths of the observations belonging to each cluster.
+#'
+#' @importFrom graphics par
+#' @importFrom graphics barplot
+#' @importFrom graphics title
+#'
 #' @export
 #' @examples
 #'
@@ -1563,13 +1582,13 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
   if (!'silhouette_plot' %in% names(evaluation_object)) {
 
-    if (class(evaluation_object) != "cluster medoids silhouette") {
+    if (!inherits(evaluation_object, 'cluster medoids silhouette')) {
 
       stop("the evaluation_object parameter should be the output of a Cluster_Medoids or Clara_Medoids function")
     }
   }
 
-  if (class(evaluation_object) == "cluster medoids silhouette") {
+  if (inherits(evaluation_object, 'cluster medoids silhouette')) {
 
     evaluation_object$silhouette_matrix = as.matrix(evaluation_object$silhouette_matrix)
 
@@ -1580,22 +1599,22 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
   # default graphics parameter setting
 
-  if (dev.cur() != 1) {
+  if (grDevices::dev.cur() != 1) {
 
-    dev.off()                          # reset par()
+    grDevices::dev.off()                          # reset par()
   }
 
   success_plot_flag = rep(FALSE, length(evaluation_object$list_intra_dissm))
 
   len_object = length(evaluation_object$list_intra_dissm)
 
-  op <- par(mfrow = c(len_object, 1),
+  op <- graphics::par(mfrow = c(len_object, 1),
 
-            oma = c(2,2,2.5,2) + 0.1,
+                      oma = c(2,2,2.5,2) + 0.1,
 
-            mar = c(2,2,2,2) + 0.1,
+                      mar = c(2,2,2,2) + 0.1,
 
-            mgp = c(2.0, 1.0, 0.0))
+                      mgp = c(2.0, 1.0, 0.0))
 
 
   # adjust y-axis using the max. number of the cluster obs.
@@ -1611,42 +1630,42 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
       if (i == 1) {
 
-        barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = F)
+        graphics::barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = F)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_silhouette[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_silhouette[[i]]))))), text.font = 2, cex = 1.0)
         }
 
-        title(main = paste0("Silhouette plot for the ", paste0(sum(unlist(lapply(evaluation_object$list_silhouette, length))), " data observations")),
+        graphics::title(main = paste0("Silhouette plot for the ", paste0(sum(unlist(lapply(evaluation_object$list_silhouette, length))), " data observations")),
 
               cex.main = 1.5, font.main = 4, col.main = "blue", outer = T)
 
-        mtext(paste0("average silhouette width : ", round(evaluation_object$avg_width_silhouette, 3)), outer = T, side = 1,
+        graphics::mtext(paste0("average silhouette width : ", round(evaluation_object$avg_width_silhouette, 3)), outer = T, side = 1,
 
               cex = 0.75, font = 2, col = "blue")}
 
       else if (i == length(evaluation_object$list_silhouette)) {
 
-        barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = T)
+        graphics::barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = T)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_silhouette[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_silhouette[[i]]))))), text.font = 2, cex = 1.0)
         }
@@ -1654,17 +1673,17 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
       else {
 
-        barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = F)
+        graphics::barplot(sort(as.vector(evaluation_object$list_silhouette[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-1.0, 1.0), ylim = c(0, max_ylim), axes = F)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('silhouette : ', round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_silhouette[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , silhouette : ', paste0(round(mean(evaluation_object$list_silhouette[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_silhouette[[i]]))))), text.font = 2, cex = 1.0)
         }
@@ -1682,46 +1701,46 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
       if (i == 1) {
 
-        barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
+        graphics::barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
 
                 ylim = c(0, max_ylim), axes = F)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_intra_dissm[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_intra_dissm[[i]]))))), text.font = 2, cex = 1.0)
         }
 
-        title(main = paste0("Dissimilarity plot for the ", paste0(sum(unlist(lapply(evaluation_object$list_intra_dissm, length))), " data observations")),
+        graphics::title(main = paste0("Dissimilarity plot for the ", paste0(sum(unlist(lapply(evaluation_object$list_intra_dissm, length))), " data observations")),
 
               cex.main = 1.5, font.main = 4, col.main = "blue", outer = T)
 
-        mtext(paste0("average dissimilarity : ", round(evaluation_object$avg_intra_clust_dissimilarity, 3)), outer = T, side = 1,
+        graphics::mtext(paste0("average dissimilarity : ", round(evaluation_object$avg_intra_clust_dissimilarity, 3)), outer = T, side = 1,
 
               cex = 0.75, font = 2, col = "blue")}
 
       else if (i == length(evaluation_object$list_intra_dissm)) {
 
-        barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
+        graphics::barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
 
                 ylim = c(0, max_ylim), axes = T)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_intra_dissm[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_intra_dissm[[i]]))))), text.font = 2, cex = 1.0)
         }
@@ -1729,19 +1748,19 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
       else {
 
-        barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
+        graphics::barplot(sort(as.vector(evaluation_object$list_intra_dissm[[i]]), decreasing = F), width = 2, horiz = T, xlim = c(-0.5, round_nearest_half + 0.1),
 
                 ylim = c(0, max_ylim), axes = F)
 
         if (len_object < 8) {
 
-          legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = c(paste0("cluster ", i), paste0('dissimilarity : ', round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                        paste0('observations : ', length(evaluation_object$list_intra_dissm[[i]]))), text.font = 2, cex = 1.0)}
 
         else {
 
-          legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
+          graphics::legend("topleft", legend = paste0("cluster ", paste0(i,  paste0( ' , dissimilarity : ', paste0(round(mean(evaluation_object$list_intra_dissm[[i]]), 3)),
 
                                                                            paste0(' , observations : ', length(evaluation_object$list_intra_dissm[[i]]))))), text.font = 2, cex = 1.0)
         }
@@ -1773,6 +1792,9 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 #' @author Lampros Mouselimis
 #' @details
 #' This function plots the clusters using 2-dimensional data and medoids or centroids.
+#'
+#' @importFrom ggplot2 ggplot aes geom_point scale_shape_manual scale_size_manual theme element_blank
+#'
 #' @export
 #' @examples
 #'
@@ -1793,17 +1815,17 @@ Silhouette_Dissimilarity_Plot = function(evaluation_object, silhouette = TRUE) {
 
 plot_2d = function(data, clusters, centroids_medoids) {
 
-  if (dev.cur() != 1) {
+  if (grDevices::dev.cur() != 1) {
 
-    dev.off()                          # reset par()
+    grDevices::dev.off()                          # reset par()
   }
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
   if ('data.frame' %in% class(centroids_medoids)) centroids_medoids = as.matrix(centroids_medoids)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (is.integer(clusters)) clusters = as.numeric(clusters)
   if (!is.vector(clusters) || class(clusters) != "numeric") stop('CLUSTER should be a numeric vector')
-  if (class(centroids_medoids) != 'matrix' || nrow(centroids_medoids) != length(unique(clusters)) || ncol(centroids_medoids) != ncol(data))
+  if (!inherits(centroids_medoids, 'matrix') || nrow(centroids_medoids) != length(unique(clusters)) || ncol(centroids_medoids) != ncol(data))
     stop('centroids_medoids should be a matrix with number of rows equal to the unique labels of clusters and number of columns equal to the number of columns of the data')
 
   flag_non_finite = check_NaN_Inf(data)
@@ -1885,6 +1907,9 @@ entropy_formula = function(x_vec) {
 #' @author Lampros Mouselimis
 #' @details
 #' This function uses external validation methods to evaluate the clustering results
+#'
+#' @importFrom gmp asNumeric chooseZ as.bigz
+#'
 #' @export
 #' @examples
 #'
@@ -2132,7 +2157,7 @@ external_validation = function(true_labels, clusters, method = "adjusted_rand_in
 center_scale = function(data, mean_center = TRUE, sd_scale = TRUE) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!is.logical(mean_center)) stop('the mean_center parameter should be either TRUE or FALSE')
   if (!is.logical(sd_scale)) stop('the sd_scale parameter should be either TRUE or FALSE')
 
@@ -2171,7 +2196,7 @@ center_scale = function(data, mean_center = TRUE, sd_scale = TRUE) {
 distance_matrix = function(data, method = 'euclidean', upper = FALSE, diagonal = FALSE, minkowski_p = 1.0, threads = 1) {
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
-  if (class(data) != 'matrix') stop('data should be either a matrix or a data frame')
+  if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (!method %in% c("euclidean", "manhattan", "chebyshev", "canberra", "braycurtis", "pearson_correlation", "simple_matching_coefficient", "minkowski",
                      "hamming", "jaccard_coefficient", "Rao_coefficient", "mahalanobis", "cosine"))
     stop("the method should be one of 'euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient',

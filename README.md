@@ -1,8 +1,9 @@
 
+
 ## ClusterR
 <br>
 
-The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the [blog-post](http://mlampros.github.io/2016/09/12/clusterR_package/), Vignette and in the package Documentation.
+The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the [blog-post](http://mlampros.github.io/2016/09/12/clusterR_package/), Vignette and in the package Documentation ( *scroll down for information on how to use the* **docker image** )
 <br><br>
 
 **UPDATE 16-08-2018**
@@ -30,13 +31,13 @@ install.packages("ClusterR")
 
 <br>
 
-or download the latest version from Github using the *devtools* package,
+or download the latest version from Github using the *remotes* package,
 
 <br>
 
 ```R
 
-devtools::install_github('mlampros/ClusterR')
+remotes::install_github('mlampros/ClusterR', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')
  
 
 ```
@@ -148,3 +149,83 @@ Use the following link to report bugs/issues,
 [https://github.com/mlampros/ClusterR/issues](https://github.com/mlampros/ClusterR/issues)
 
 <br>
+
+
+**UPDATE 28-11-2019**
+
+<br>
+
+**Docker images** of the *ClusterR* package are available to download from my [dockerhub](https://hub.docker.com/r/mlampros/clusterr) account. The images come with *Rstudio* and the *R-development* version (latest) installed. The whole process was tested on Ubuntu 18.04. To **pull** & **run** the image do the following,
+
+<br>
+
+```R
+
+docker pull mlampros/clusterr:rstudiodev
+
+docker run -d --name rstudio_dev -e USER=rstudio -e PASSWORD=give_here_your_password --rm -p 8787:8787 mlampros/clusterr:rstudiodev
+
+```
+
+<br>
+
+The user can also **bind** a home directory / folder to the image to use its files by specifying the **-v** command,
+
+<br>
+
+```R
+
+docker run -d --name rstudio_dev -e USER=rstudio -e PASSWORD=give_here_your_password --rm -p 8787:8787 -v /home/YOUR_DIR:/home/rstudio/YOUR_DIR mlampros/clusterr:rstudiodev
+
+
+```
+
+<br>
+
+In the latter case you might have first give permission privileges for write access to **YOUR_DIR** directory (not necessarily) using,
+
+<br>
+
+```R
+
+chmod -R 777 /home/YOUR_DIR
+
+
+```
+
+<br>
+
+The **USER** defaults to *rstudio* but you have to give your **PASSWORD** of preference (see [www.rocker-project.org](https://www.rocker-project.org/) for more information).
+
+<br>
+
+Open your web-browser and depending where the docker image was *build / run* give, 
+
+<br>
+
+**1st. Option** on your personal computer,
+
+<br>
+
+```R
+http://0.0.0.0:8787 
+
+```
+
+<br>
+
+**2nd. Option** on a cloud instance, 
+
+<br>
+
+```R
+http://Public DNS:8787
+
+```
+
+<br>
+
+to access the Rstudio console in order to give your username and password.
+
+<br>
+
