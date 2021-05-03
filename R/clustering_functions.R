@@ -134,7 +134,7 @@ predict_GMM = function(data, CENTROIDS, COVARIANCE, WEIGHTS) {
 
   res = predict_MGausDPDF(data, CENTROIDS, COVARIANCE, WEIGHTS, eps = 1.0e-8)
 
-  return(structure(list(log_likelihood = res$Log_likelihood_raw, cluster_proba = res$cluster_proba, cluster_labels = as.vector(res$cluster_labels)),
+  return(structure(list(log_likelihood = res$Log_likelihood_raw, cluster_proba = res$cluster_proba, cluster_labels = as.vector(res$cluster_labels) + 1),          # I've added 1 to the output cluster labels to account for the difference in indexing between R and C++
 
                    class = 'Gaussian Mixture Models'))
 }
@@ -597,6 +597,10 @@ predict_KMeans = function(data, CENTROIDS, threads = 1) {
 #' In case that the \emph{max_clusters} parameter is a contiguous or non-contiguous vector then plotting is disabled. Therefore, plotting is enabled only if the \emph{max_clusters} parameter is of length 1.
 #' Moreover, the \emph{distortion_fK} criterion can't be computed if the \emph{max_clusters} parameter is a contiguous or non-continguous vector ( the \emph{distortion_fK} criterion requires consecutive clusters ).
 #' The same applies also to the \emph{Adjusted_Rsquared} criterion which returns incorrect output.
+#'
+#' @references
+#'
+#' https://core.ac.uk/download/pdf/205410925.pdf
 #'
 #' @importFrom utils txtProgressBar
 #' @importFrom utils setTxtProgressBar

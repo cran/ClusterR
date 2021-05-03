@@ -12,10 +12,35 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2020-05-12" />
+<meta name="date" content="2021-05-03" />
 
 <title>Functionality of the ClusterR package</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -106,6 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -303,7 +329,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author">Lampros Mouselimis</h4>
-<h4 class="date">2020-05-12</h4>
+<h4 class="date">2021-05-03</h4>
 
 
 
@@ -487,7 +513,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb19-9"><a href="#cb19-9"></a>t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start</span>
 <span id="cb19-10"><a href="#cb19-10"></a>  </span>
 <span id="cb19-11"><a href="#cb19-11"></a><span class="kw">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 2.452056 secs</code></pre>
+<pre><code>## time to complete : 2.47534 secs</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>getcent_init =<span class="st"> </span>km_init<span class="op">$</span>centroids</span>
 <span id="cb21-2"><a href="#cb21-2"></a></span>
 <span id="cb21-3"><a href="#cb21-3"></a>getclust_init =<span class="st"> </span>km_init<span class="op">$</span>clusters</span>
@@ -515,7 +541,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb22-13"><a href="#cb22-13"></a>t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start</span>
 <span id="cb22-14"><a href="#cb22-14"></a>  </span>
 <span id="cb22-15"><a href="#cb22-15"></a><span class="kw">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 0.8850062 secs</code></pre>
+<pre><code>## time to complete : 0.8934784 secs</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>getcent_mb =<span class="st"> </span>km_mb<span class="op">$</span>centroids</span>
 <span id="cb24-2"><a href="#cb24-2"></a></span>
 <span id="cb24-3"><a href="#cb24-3"></a>new_im_mb =<span class="st"> </span>getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span></span>
@@ -560,13 +586,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td align="left">0.5733587</td>
 <td align="left">0.2545221</td>
 </tr>
-<tr class="even">
-<td align="left"><br></td>
-<td align="left"></td>
-</tr>
 </tbody>
 </table>
-<p>As mentioned before the <em>gowdis</em> function of the FD package allows the user to give different weights to each separate variable. The weights parameter can be tuned, for example by using <a href="http://www.math.vu.nl/~sbhulai/papers/paper-vandenhoven.pdf">random search</a>, in order to achieve better clustering results. For instance, by using the following weights for each separate variable one can improve both the <em>adjusted-rand-index</em> (external validation) and the <em>average silhouette width</em> (internal validation), <br></p>
+<p><br></p>
+<p>As mentioned before the <em>gowdis</em> function of the FD package allows the user to give different weights to each separate variable. The weights parameter can be tuned, for example by using <a href="https://www.math.vu.nl/~sbhulai/papers/paper-vandenhoven.pdf">random search</a>, in order to achieve better clustering results. For instance, by using the following weights for each separate variable one can improve both the <em>adjusted-rand-index</em> (external validation) and the <em>average silhouette width</em> (internal validation), <br></p>
 <table>
 <thead>
 <tr class="header">
@@ -663,12 +686,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td align="left">habitat</td>
 <td align="left">44.519</td>
 </tr>
-<tr class="odd">
-<td align="left"><br></td>
-<td align="left"></td>
-</tr>
 </tbody>
 </table>
+<p><br></p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>weights =<span class="st"> </span><span class="kw">c</span>(<span class="fl">4.626</span>, <span class="fl">38.323</span>, <span class="fl">55.899</span>, <span class="fl">34.028</span>, <span class="fl">169.608</span>, <span class="fl">6.643</span>, <span class="fl">42.08</span>, <span class="fl">57.366</span>, <span class="fl">37.938</span>, </span>
 <span id="cb26-2"><a href="#cb26-2"></a>            </span>
 <span id="cb26-3"><a href="#cb26-3"></a>            <span class="fl">33.081</span>, <span class="fl">65.105</span>, <span class="fl">18.718</span>, <span class="fl">76.165</span>, <span class="fl">27.596</span>, <span class="fl">26.238</span>, <span class="fl">0.0</span>, <span class="fl">1.507</span>, <span class="fl">37.314</span>, </span>
@@ -719,7 +739,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb27-16"><a href="#cb27-16"></a>t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start</span>
 <span id="cb27-17"><a href="#cb27-17"></a>  </span>
 <span id="cb27-18"><a href="#cb27-18"></a><span class="kw">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.636512 secs</code></pre>
+<pre><code>## time to complete : 2.892468 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -734,12 +754,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td align="left">0.5944456</td>
 <td align="left">0.2678507</td>
 </tr>
-<tr class="even">
-<td align="left"><br><br></td>
-<td align="left"></td>
-</tr>
 </tbody>
 </table>
+<p><br><br></p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>start =<span class="st"> </span><span class="kw">Sys.time</span>()</span>
 <span id="cb29-2"><a href="#cb29-2"></a></span>
 <span id="cb29-3"><a href="#cb29-3"></a>cl_e =<span class="st"> </span><span class="kw">Cluster_Medoids</span>(cl_X, <span class="dt">clusters =</span> <span class="dv">2</span>, <span class="dt">distance_metric =</span> <span class="st">&#39;hamming&#39;</span>, <span class="dt">swap_phase =</span> <span class="ot">TRUE</span>, </span>
@@ -751,7 +768,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb29-9"><a href="#cb29-9"></a>t =<span class="st"> </span>end <span class="op">-</span><span class="st"> </span>start</span>
 <span id="cb29-10"><a href="#cb29-10"></a>  </span>
 <span id="cb29-11"><a href="#cb29-11"></a><span class="kw">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="kw">attributes</span>(t)<span class="op">$</span>units, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 18.70252 secs</code></pre>
+<pre><code>## time to complete : 13.02382 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>
