@@ -1,4 +1,8 @@
 
+## ClusterR 1.2.4
+
+* I fixed an error in the *CITATION* file
+
 
 ## ClusterR 1.2.3
 

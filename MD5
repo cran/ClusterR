@@ -1,6 +1,6 @@
-60265a7552730625f8997861b28b1f84 *DESCRIPTION
+24bd9af99a151952653f4e15fce7c235 *DESCRIPTION
 f85385f4d440f19f92d49280a2dede8c *NAMESPACE
-390bc846d9e1de83770326d27db3a6d0 *NEWS.md
+0e81f3cfda1e0140c8be435a0a977802 *NEWS.md
 b548736909a2046545359623e6587052 *R/ClusterR.R
 a1034a2f8f1395cacb402818d08df136 *R/RcppExports.R
 35f225d30d6052d8f9705f283cae7756 *R/clustering_functions.R
@@ -9,10 +9,10 @@ b044df44bd5e4be0ff7b47fad26f881b *README.md
 8b6687f3bb9c58cd74ae67670872215d *data/dietary_survey_IBS.rda
 aa58963ebd13c4c91edf809ca4efc5d4 *data/mushroom.rda
 a9e3dfd8650ed7d2d0a91d3880a67f7b *data/soybean.rda
-e4f8607a5b939e6720534acf72744fc1 *inst/CITATION
+1c2fe23b16f781cdefa23a095e988bf6 *inst/CITATION
 445ae4e451cdc0da2ccd21f401ac80b2 *inst/doc/the_clusterR_package.R
 82a70334fd1785992a84fff8da2d0b89 *inst/doc/the_clusterR_package.Rmd
-d066b51d227fe2d282fb77b49ad96d23 *inst/doc/the_clusterR_package.html
+872d146aee0adf28cce7f45b3182b6f6 *inst/doc/the_clusterR_package.html
 866b2b9dcf93dfeaf6a600e6a72f3e67 *inst/include/ClusterRHeader.h
 a860f3aa0880724f4fbefec5f157a367 *inst/include/affinity_propagation.h
 8e875d0482f3387928cc3190af217d4a *man/AP_affinity_propagation.Rd

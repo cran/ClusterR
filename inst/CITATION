@@ -38,6 +38,7 @@ bibentry(
   bibtype = "Manual",
   title   = "Mini-Batch-K-Means",
   author  = person("Siddharth", "Agrawal"),
+  year    = "2013",
   url     = "https://github.com/siddharth-agrawal/Mini-Batch-K-Means"
 )
 
@@ -62,7 +63,7 @@ bibentry(
 bibentry(
   bibtype  = "Article",
   title    = "Clustering by Passing Messages Between Data Points",
-  author   = c(as.person("Brendan J. Frey"), as.person("Delbert Dueck")),
+  author   = c(as.person("Brendan Frey"), as.person("Delbert Dueck")),
   journal  = "Science",
   year     = "2007",
   volume   = "315",
@@ -82,7 +83,7 @@ bibentry(
 bibentry(
   bibtype  = "Article",
   title    = "Selection of K in K-means clustering",
-  author   = c(as.person("D T Pham"), as.person("S S Dimov"), as.person("C D Nguyen")),
+  author   = c(as.person("D Pham"), as.person("S Dimov"), as.person("C Nguyen")),
   journal  = "Proceedings of the Institution of Mechanical Engineers, Part C: Journal of Mechanical Engineering Science",
   year     = "2004",
   url      = "https://core.ac.uk/download/pdf/205410925.pdf",
