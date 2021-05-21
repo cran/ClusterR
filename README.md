@@ -228,3 +228,21 @@ to access the Rstudio console in order to give your username and password.
 
 <br>
 
+### **Citation:**
+
+If you use the code of this repository in your paper or research please cite both **ClusterR** and the **original articles / software** `https://CRAN.R-project.org/package=ClusterR`:
+
+<br>
+
+```R
+@Manual{,
+  title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans, K-Medoids and Affinity Propagation Clustering},
+  author = {Lampros Mouselimis},
+  year = {2021},
+  note = {R package version 1.2.4},
+  url = {https://CRAN.R-project.org/package=ClusterR},
+}
+```
+
+<br>
+
