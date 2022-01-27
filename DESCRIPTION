@@ -2,9 +2,9 @@ Package: ClusterR
 Type: Package
 Title: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans, K-Medoids
         and Affinity Propagation Clustering
-Version: 1.2.5
-Date: 2021-05-21
-Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")), person(given = "Conrad", family = "Sanderson", role = "cph", comment = "Author of the C++ Armadillo library"), person(given = "Ryan", family = "Curtin", role = "cph", comment = "Author of the C++ Armadillo library"), person(given = "Siddharth", family = "Agrawal", role = "cph", comment = "Author of the C code of the Mini-Batch-Kmeans algorithm (https://github.com/siddharth-agrawal/Mini-Batch-K-Means)"), person(given = "Brendan", family = "Frey", email = "frey@psi.toronto.edu", role = "cph", comment = "Author of the matlab code of the Affinity propagation algorithm (for commercial use please contact the author of the matlab code)"), person(given = "Delbert", family = "Dueck", role = "cph", comment = "Author of the matlab code of the Affinity propagation algorithm") )  
+Version: 1.2.6
+Date: 2022-01-27
+Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")), person(given = "Conrad", family = "Sanderson", role = "cph", comment = "Author of the C++ Armadillo library"), person(given = "Ryan", family = "Curtin", role = "cph", comment = "Author of the C++ Armadillo library"), person(given = "Siddharth", family = "Agrawal", role = "cph", comment = "Author of the C code of the Mini-Batch-Kmeans algorithm (https://github.com/siddharth-agrawal/Mini-Batch-K-Means)"), person(given = "Brendan", family = "Frey", email = "frey@psi.toronto.edu", role = "cph", comment = "Author of the matlab code of the Affinity propagation algorithm (for commercial use please contact the author of the matlab code)"), person(given = "Delbert", family = "Dueck", role = "cph", comment = "Author of the matlab code of the Affinity propagation algorithm"), person(given = "Vitalie", family = "Spinu", email = "spinuvit@gmail.com", role = "ctb", comment = c(Github = "Github Contributor")) )  
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 BugReports: https://github.com/mlampros/ClusterR/issues
 URL: https://github.com/mlampros/ClusterR
@@ -26,9 +26,9 @@ Imports: Rcpp (>= 0.12.5), graphics, grDevices, utils, stats, gmp,
 LinkingTo: Rcpp, RcppArmadillo (>= 0.9.1)
 Suggests: OpenImageR, FD, testthat, covr, knitr, rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 NeedsCompilation: yes
-Packaged: 2021-05-21 05:58:00 UTC; lampros
+Packaged: 2022-01-27 18:39:42 UTC; lampros
 Author: Lampros Mouselimis [aut, cre] (<https://orcid.org/0000-0002-8024-1546>),
   Conrad Sanderson [cph] (Author of the C++ Armadillo library),
   Ryan Curtin [cph] (Author of the C++ Armadillo library),
@@ -39,6 +39,7 @@ Author: Lampros Mouselimis [aut, cre] (<https://orcid.org/0000-0002-8024-1546>),
     propagation algorithm (for commercial use please contact the author
     of the matlab code)),
   Delbert Dueck [cph] (Author of the matlab code of the Affinity
-    propagation algorithm)
+    propagation algorithm),
+  Vitalie Spinu [ctb] (Github Contributor)
 Repository: CRAN
-Date/Publication: 2021-05-21 06:40:05 UTC
+Date/Publication: 2022-01-27 23:40:02 UTC

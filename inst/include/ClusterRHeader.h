@@ -250,57 +250,59 @@ namespace clustR {
       arma::mat kmeans_pp_init(arma::mat& data, int clusters, bool medoids = false) {
 
         arma::rowvec centroid_data(data.n_rows);                                                 // begin with inf values as I'll pick in every iteration the minimum
-
-        centroid_data.fill(arma::datum::inf);
-
+        centroid_data.fill(arma::datum::inf);                                                    // initialize a vector of Inf [ max. values ]
         arma::mat centroids(clusters, data.n_cols);                                              // save the end-centroids
-
         arma::mat medoids_vec(1, clusters);                                                      // in case of medoids
-
         arma::rowvec first = sample_vec(1, 0, data.n_rows - 1, false);                           // choose the first observation at random
+        arma::vec i_out = arma::regspace(0, data.n_rows - 1);
 
-        arma::rowvec indices(clusters);
-
-        int idx = first(0);                                                                      // update idx in every iteration
+        int idx = first(0);                                                                      // update idx in every iteration [ see line 'idx = j' line ]
 
         for (int clust = 0; clust < clusters; clust++) {
 
-          indices(clust) = idx;
-
           arma::rowvec choose_row = data.row(idx);
-
           arma::rowvec tmp_dist(data.n_rows);
 
-          for (unsigned int i = 0; i < data.n_rows; i++) {                                                // iterate over the data-rows and calculate the distance between centroid and data
+          for (unsigned int i = 0; i < data.n_rows; i++) {                                       // iterate over the data-rows and calculate the distance between centroid and data
 
             double tmp_val = kmeans_pp_dist(arma::conv_to< arma::rowvec >::from(data.row(i)), choose_row);
-
             arma::vec tmp_cent = { centroid_data(i), tmp_val };                                  // then pick the minimum between the current and the previous iters values
-
             tmp_dist(i) = arma::min(tmp_cent);
           }
 
-          centroid_data = tmp_dist;
-
+          centroid_data = tmp_dist;                                                              // at every iteration I overwrite the 'centroid_data' with the 'tmp_dist' values
           arma::rowvec prob = tmp_dist / arma::sum(tmp_dist);
-
           arma::rowvec cum_sum = arma::cumsum(prob);                                             // calculate the cumulative probability
-
-          cum_sum = arma::unique(cum_sum);
-
+          // cum_sum = arma::unique(cum_sum);                                                    // in my previous code version of the 'kmeans_pp_init()' function I continued with the unique values, however this can reduce the size and give an error in the next lines (I expect it to be the same size as the 'i_out_subs' vector). It doesn't make any difference because I iterate over the 'cum_sum_subs' vector and see if '(cum_sum_subs(j) > r)', thus duplicated values will be just skipped
           arma::rowvec rr = arma::conv_to< arma::rowvec >::from(arma::randu(cum_sum.n_elem));
 
           double r = rr(0);                                                                      // pick a random value using the randu() function of armadillo
 
-          for (unsigned int j = 0; j < cum_sum.n_elem; j++) {
+          arma::vec i_out_subs(i_out);
+          arma::vec cum_sum_subs(cum_sum.n_elem);
 
-            if (cum_sum(j) > r) {
+          for (unsigned int k = 0; k < cum_sum.n_elem; k++) {
+            cum_sum_subs(k) = cum_sum(k);
+          }
 
-              idx = j;                                                                           // update idx
+          arma::mat data_subs(data);
 
-              centroids.row(clust) = arma::conv_to< arma::rowvec >::from(data.row(j));           // add the centroids
+          if (clust > 0) {
 
-              if (medoids) { medoids_vec.col(clust) = j; }
+            arma::uvec subs_idx = arma::conv_to< arma::uvec >::from(medoids_vec.row(0));           // use the medoids to subset the cum_sum and the data before picking a new centroid
+            subs_idx = subs_idx.subvec(0, clust);                                                  // keep until the current iterations centroid-index
+            i_out_subs.shed_rows(subs_idx);
+            cum_sum_subs.shed_rows(subs_idx);
+            data_subs.shed_rows(subs_idx);
+          }
+
+          for (unsigned int j = 0; j < cum_sum_subs.n_elem; j++) {
+
+            if (cum_sum_subs(j) > r) {
+
+              idx = i_out_subs(j);                                                                    // update (overwrite) the 'idx'
+              centroids.row(clust) = arma::conv_to< arma::rowvec >::from(data_subs.row(j));           // add the centroids
+              medoids_vec.col(clust) = i_out_subs(j);                                                 // the output 'medoids' are also the output row-data-indices  [ they return the index of the centroids ]
 
               break;
             }
@@ -308,15 +310,85 @@ namespace clustR {
         }
 
         if (medoids) {
-
-          return medoids_vec;}
-
+          return medoids_vec;
+        }
         else {
-
           return centroids;
         }
       }
 
+
+      //..................................................................................................... !! Previous version of the function which returned duplicated centroids [ see: https://github.com/mlampros/ClusterR/issues/25 ]
+      // arma::mat kmeans_pp_init(arma::mat& data, int clusters, bool medoids = false) {
+      //
+      //   arma::rowvec centroid_data(data.n_rows);                                                 // begin with inf values as I'll pick in every iteration the minimum
+      //
+      //   centroid_data.fill(arma::datum::inf);
+      //
+      //   arma::mat centroids(clusters, data.n_cols);                                              // save the end-centroids
+      //
+      //   arma::mat medoids_vec(1, clusters);                                                      // in case of medoids
+      //
+      //   arma::rowvec first = sample_vec(1, 0, data.n_rows - 1, false);                           // choose the first observation at random
+      //
+      //   arma::rowvec indices(clusters);
+      //
+      //   int idx = first(0);                                                                      // update idx in every iteration
+      //
+      //   for (int clust = 0; clust < clusters; clust++) {
+      //
+      //     indices(clust) = idx;
+      //
+      //     arma::rowvec choose_row = data.row(idx);
+      //
+      //     arma::rowvec tmp_dist(data.n_rows);
+      //
+      //     for (unsigned int i = 0; i < data.n_rows; i++) {                                                // iterate over the data-rows and calculate the distance between centroid and data
+      //
+      //       double tmp_val = kmeans_pp_dist(arma::conv_to< arma::rowvec >::from(data.row(i)), choose_row);
+      //
+      //       arma::vec tmp_cent = { centroid_data(i), tmp_val };                                  // then pick the minimum between the current and the previous iters values
+      //
+      //       tmp_dist(i) = arma::min(tmp_cent);
+      //     }
+      //
+      //     centroid_data = tmp_dist;
+      //
+      //     arma::rowvec prob = tmp_dist / arma::sum(tmp_dist);
+      //
+      //     arma::rowvec cum_sum = arma::cumsum(prob);                                             // calculate the cumulative probability
+      //
+      //     cum_sum = arma::unique(cum_sum);
+      //
+      //     arma::rowvec rr = arma::conv_to< arma::rowvec >::from(arma::randu(cum_sum.n_elem));
+      //
+      //     double r = rr(0);                                                                      // pick a random value using the randu() function of armadillo
+      //
+      //     for (unsigned int j = 0; j < cum_sum.n_elem; j++) {
+      //
+      //       if (cum_sum(j) > r) {
+      //
+      //         idx = j;                                                                           // update idx
+      //
+      //         centroids.row(clust) = arma::conv_to< arma::rowvec >::from(data.row(j));           // add the centroids
+      //
+      //         if (medoids) { medoids_vec.col(clust) = j; }
+      //
+      //         break;
+      //       }
+      //     }
+      //   }
+      //
+      //   if (medoids) {
+      //
+      //     return medoids_vec;}
+      //
+      //   else {
+      //
+      //     return centroids;
+      //   }
+      // }
+      //.....................................................................................................
 
 
       // calculate fuzzy (soft) clusters
@@ -818,9 +890,13 @@ namespace clustR {
             fuzzy_mat.row(i) = norm_fuzzy(arma::conv_to< arma::rowvec >::from(lst_fuzzy_out.row(i)), eps);
           }
 
-          return Rcpp::List::create(Rcpp::Named("clusters") = lst_out, Rcpp::Named("fuzzy_clusters") = fuzzy_mat, Rcpp::Named("centers") = centers_out, Rcpp::Named("total_SSE") = tmp_sse,
-
-                                                Rcpp::Named("best_initialization") = end_init, Rcpp::Named("WCSS_per_cluster") = bst_WCSS, Rcpp::Named("obs_per_cluster") = bst_obs);
+          return Rcpp::List::create(Rcpp::Named("clusters") = lst_out,
+									Rcpp::Named("fuzzy_clusters") = fuzzy_mat,
+									Rcpp::Named("centers") = centers_out,
+									Rcpp::Named("total_SSE") = tmp_sse,
+									Rcpp::Named("best_initialization") = end_init,
+									Rcpp::Named("WCSS_per_cluster") = bst_WCSS,
+									Rcpp::Named("obs_per_cluster") = bst_obs);
         }
 
         else {
@@ -2630,7 +2706,6 @@ namespace clustR {
       //
 
       Rcpp::List ClusterMedoids(arma::mat& data, int clusters, std::string method, double minkowski_p = 1.0, int threads = 1, bool verbose = false, bool swap_phase = false,
-
                                 bool fuzzy = false, int seed = 1) {
 
         #ifdef _OPENMP
@@ -2885,14 +2960,16 @@ namespace clustR {
 
         double end_cost_vec_scalar = arma::accu(end_cost_vec);
 
-        return Rcpp::List::create(Rcpp::Named("medoids") = end_idxs, Rcpp::Named("cost") = end_cost_vec_scalar, Rcpp::Named("dissimilarity_matrix") = data,
-
-                                  Rcpp::Named("clusters") = end_indices_vec, Rcpp::Named("end_cost_vec") = end_cost_vec, Rcpp::Named("silhouette_matrix") = befout_silhouette_matrix,
-
-                                              Rcpp::Named("fuzzy_probs") = fuz_out, Rcpp::Named("clustering_stats") = befout_clustering_stats, Rcpp::Named("flag_dissim_mat") = flag_dissim_mat);
+        return Rcpp::List::create(Rcpp::Named("medoids") = end_idxs,
+								  Rcpp::Named("cost") = end_cost_vec_scalar,
+								  Rcpp::Named("dissimilarity_matrix") = data,
+                                  Rcpp::Named("clusters") = end_indices_vec,
+								  Rcpp::Named("end_cost_vec") = end_cost_vec,
+								  Rcpp::Named("silhouette_matrix") = befout_silhouette_matrix,
+								  Rcpp::Named("fuzzy_probs") = fuz_out,
+								  Rcpp::Named("clustering_stats") = befout_clustering_stats,
+								  Rcpp::Named("flag_dissim_mat") = flag_dissim_mat);
       }
-
-
 
 
       // calculate global dissimilarities for claraMedoids
@@ -3088,9 +3165,9 @@ namespace clustR {
 
           Rcpp::List clM_sblist = ClusterMedoids(tmp_dat, clusters, method, minkowski_p, threads, false, swap_phase, false);
 
-          double local_dissim = Rcpp::as<double> (clM_sblist[1]);
+          double local_dissim = Rcpp::as<double> (clM_sblist["cost"]);
 
-          arma::uvec local_medoids = Rcpp::as<arma::uvec> (clM_sblist[0]);
+          arma::uvec local_medoids = Rcpp::as<arma::uvec> (clM_sblist["medoids"]);
 
           arma::mat tmp_glob = dissim_MEDOIDS(data, method, copy_dat.rows(local_medoids), minkowski_p , threads, 1.0e-6);          // use all data to calculate global dissimilarity
 
@@ -3150,13 +3227,15 @@ namespace clustR {
 
         fuz_st_mat = fuz_st_mat.t();
 
-        return Rcpp::List::create(Rcpp::Named("medoids") = subs_meds, Rcpp::Named("bst_dissimilarity") = dism, Rcpp::Named("medoid_indices") = out_medoid,
-
-                                              Rcpp::Named("sample_indices") = clr_split_out_rowvec, Rcpp::Named("clusters") = hard_clust,
-
-                                              Rcpp::Named("bst_sample_silhouette_matrix") = bst_sample_silh_mat, Rcpp::Named("fuzzy_probs") = fuz_and_stats_mt,
-
-                                              Rcpp::Named("clustering_stats") = fuz_st_mat, Rcpp::Named("bst_sample_dissimilarity_matrix") = bst_sample_dissm_mat);
+        return Rcpp::List::create(Rcpp::Named("medoids") = subs_meds,
+                                  Rcpp::Named("best_dissimilarity") = dism,
+                                  Rcpp::Named("medoid_indices") = out_medoid,
+                                  Rcpp::Named("sample_indices") = clr_split_out_rowvec,
+                                  Rcpp::Named("clusters") = hard_clust,
+                                  Rcpp::Named("silhouette_matrix") = bst_sample_silh_mat,
+                                  Rcpp::Named("fuzzy_probs") = fuz_and_stats_mt,
+                                  Rcpp::Named("clustering_stats") = fuz_st_mat,
+                                  Rcpp::Named("dissimilarity_matrix") = bst_sample_dissm_mat);
       }
 
 
@@ -3211,7 +3290,7 @@ namespace clustR {
 
       Rcpp::List split_rcpp_lst(Rcpp::List lst) {
 
-        arma::mat silh_mat = Rcpp::as<arma::mat> (lst[5]);
+        arma::mat silh_mat = Rcpp::as<arma::mat> (lst["silhouette_matrix"]);
 
         arma::vec tmp_clust = arma::conv_to< arma::vec >::from(silh_mat.col(0));
 

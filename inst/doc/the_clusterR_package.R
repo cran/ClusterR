@@ -14,12 +14,10 @@ dat = center_scale(X, mean_center = T, sd_scale = T)  # centering and scaling th
 
 ## ---- eval = F----------------------------------------------------------------
 #  gmm = GMM(dat, 2, dist_mode = "maha_dist", seed_mode = "random_subset", km_iter = 10,
-#  
 #            em_iter = 10, verbose = F)
 #  
 #  # predict centroids, covariance matrix and weights
-#  
-#  pr = predict_GMM(dat, gmm$centroids, gmm$covariance_matrices, gmm$weights)
+#  pr = predict(gmm, newdata = dat)
 #  
 
 ## ---- eval = F----------------------------------------------------------------
@@ -82,9 +80,7 @@ dat = center_scale(X, mean_center = T, sd_scale = T)  # centering and scaling th
 
 library(OpenImageR)
 
-path = 'elephant.jpg'
-
-im = readImage(path)
+im = readImage('elephant.jpg')
 
 # first resize the image to reduce the dimensions
 im = resizeImage(im, 75, 75, method = 'bilinear')            
@@ -98,10 +94,11 @@ im2 = apply(im, 3, as.vector)                                # vectorize RGB
 # perform KMeans_rcpp clustering
 
 km_rc = KMeans_rcpp(im2, clusters = 5, num_init = 5, max_iters = 100, 
-                    
                     initializer = 'optimal_init', verbose = F)
 
 km_rc$between.SS_DIV_total.SS
+pr = predict(km_rc, newdata = im2)
+
 
 ## ----fig.width = 3.0, fig.height = 3.0, echo = T, eval = T--------------------
 getcent = km_rc$centroids
@@ -125,9 +122,7 @@ opt = Optimal_Clusters_KMeans(im2, max_clusters = 10, plot_clusters = T,
 
 ## ----fig.width = 3.0, fig.height = 3.0, echo = T, eval = T--------------------
 
-path_d = 'dog.jpg'
-
-im_d = readImage(path_d)
+im_d = readImage('dog.jpg')
 
 # first resize the image to reduce the dimensions
 im_d = resizeImage(im_d, 350, 350, method = 'bilinear')            
@@ -143,8 +138,7 @@ dim(im3)                                              # initial dimensions of th
 start = Sys.time()
 
 km_init = KMeans_rcpp(im3, clusters = 5, num_init = 5, max_iters = 100, 
-                    
-                    initializer = 'kmeans++', verbose = F)
+                      initializer = 'kmeans++', verbose = F)
 
 end = Sys.time()
 
@@ -167,12 +161,10 @@ imageShow(new_im_init)
 start = Sys.time()
 
 km_mb = MiniBatchKmeans(im3, clusters = 5, batch_size = 20, num_init = 5, max_iters = 100, 
-                        
                         init_fraction = 0.2, initializer = 'kmeans++', early_stop_iter = 10,
-                        
                         verbose = F)
 
-pr_mb = predict_MBatchKMeans(im3, km_mb$centroids)
+pr_mb = predict(km_mb, newdata = im3)
 
 end = Sys.time()
 
@@ -249,7 +241,6 @@ for (i in 1:ncol(cl_X)) { cl_X[, i] = as.numeric(cl_X[, i]) }
 start = Sys.time()
 
 cl_f = Clara_Medoids(cl_X, clusters = 2, distance_metric = 'hamming', samples = 5, 
-                     
                      sample_size = 0.2, swap_phase = TRUE, verbose = F, threads = 1)
 
 end = Sys.time()
@@ -266,8 +257,7 @@ cat('time to complete :', t, attributes(t)$units, '\n')
 
 start = Sys.time()
 
-cl_e = Cluster_Medoids(cl_X, clusters = 2, distance_metric = 'hamming', swap_phase = TRUE, 
-                       
+cl_e = Cluster_Medoids(cl_X, clusters = 2, distance_metric = 'hamming', swap_phase = TRUE,  
                        verbose = F, threads = 1)
 
 end = Sys.time()
