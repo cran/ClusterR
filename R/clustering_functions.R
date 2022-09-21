@@ -627,7 +627,7 @@ print.KMeansCluster <- function(x, ...) {
 #'
 #' @references
 #'
-#' https://core.ac.uk/download/pdf/205410925.pdf
+#' https://www.ee.columbia.edu/~dpwe/papers/PhamDN05-kmeans.pdf
 #'
 #' @importFrom utils txtProgressBar
 #' @importFrom utils setTxtProgressBar
@@ -1089,7 +1089,7 @@ predict_MBatchKMeans = function(data, CENTROIDS, fuzzy = FALSE) {
 #' @param swap_phase either TRUE or FALSE. If TRUE then both phases ('build' and 'swap') will take place. The 'swap_phase' is considered more computationally intensive.
 #' @param fuzzy either TRUE or FALSE. If TRUE, then probabilities for each cluster will be returned based on the distance between observations and medoids
 #' @param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
-#' @param seed integer value for random number generator (RNG)
+#' @param seed `r lifecycle::badge("deprecated")` `seed` (integer value for random number generator (RNG)) is no longer supported and will be removed in version 1.3.0
 #' @return a list with the following attributes: medoids, medoid_indices, best_dissimilarity, dissimilarity_matrix, clusters, fuzzy_probs (if fuzzy = TRUE), silhouette_matrix, clustering_stats
 #' @author Lampros Mouselimis
 #' @details
@@ -1109,6 +1109,15 @@ predict_MBatchKMeans = function(data, CENTROIDS, fuzzy = FALSE) {
 #' cm = Cluster_Medoids(dat, clusters = 3, distance_metric = 'euclidean', swap_phase = TRUE)
 #'
 Cluster_Medoids = function(data, clusters, distance_metric = 'euclidean', minkowski_p = 1.0, threads = 1, swap_phase = TRUE, fuzzy = FALSE, verbose = FALSE, seed = 1) {
+
+  if (lifecycle::is_present(seed)) {
+
+    lifecycle::deprecate_warn(
+      when = "1.2.6",
+      what = "Cluster_Medoids(seed)",
+      details = "The 'seed' parameter will be removed in version 1.3.0"
+    )
+  }
 
   if ('data.frame' %in% class(data)) data = as.matrix(data)
   if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame or a dissimilarity matrix with equal number of rows and columns and a diagonal equal to 0.0')
@@ -1887,7 +1896,7 @@ plot_2d = function(data, clusters, centroids_medoids) {
   if ('data.frame' %in% class(centroids_medoids)) centroids_medoids = as.matrix(centroids_medoids)
   if (!inherits(data, 'matrix')) stop('data should be either a matrix or a data frame')
   if (is.integer(clusters)) clusters = as.numeric(clusters)
-  if (!is.vector(clusters) || class(clusters) != "numeric") stop('CLUSTER should be a numeric vector')
+  if (!is.vector(clusters) || !inherits(clusters, "numeric")) stop('The "clusters" parameter has to be a numeric vector!')
   if (!inherits(centroids_medoids, 'matrix') || nrow(centroids_medoids) != length(unique(clusters)) || ncol(centroids_medoids) != ncol(data))
     stop('centroids_medoids should be a matrix with number of rows equal to the unique labels of clusters and number of columns equal to the number of columns of the data')
 
