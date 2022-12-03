@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2022-09-21" />
+<meta name="date" content="2022-12-03" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author">Lampros Mouselimis</h4>
-<h4 class="date">2022-09-21</h4>
+<h4 class="date">2022-12-03</h4>
 
 
 
@@ -164,7 +164,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="gaussian-mixture-models-gmm" class="section level5">
 <h5>Gaussian Mixture Models (GMM)</h5>
 <p><a href="https://brilliant.org/wiki/gaussian-mixture-model/">Gaussian Mixture Models</a> are a probabilistic model for representing normally distributed subpopulations within an overall population. A Gaussian mixture model is parameterized by two types of values, the mixture <em>component weights</em> and the <em>component means</em> and <em>covariances</em> (for the <em>multivariate</em> case). If the number of components is known, expectation maximization is the technique most commonly used to estimate the mixture model’s parameters.<br></p>
-<p>The <strong>GMM</strong> function in the <em>ClusterR</em> package is an R implementation of the <a href="http://arma.sourceforge.net/docs.html#gmm_diag">Armadillo library</a> class for modeling data as a Gaussian Mixture Model (GMM), under the assumption of <em>diagonal</em> covariance matrices. A number of function parameters can be tuned, among others the <em>gaussian_comps</em>, the <em>dist_mode</em> (eucl_dist, maha_dist), the <em>seed_mode</em> (static_subset, random_subset, static_spread, random_spread), the <em>km_iter</em> and the <em>em_iter</em> (more information about the parameters can be found in the package documentation). I’ll illustrate the <em>GMM</em> function using the synthetic data <em>dietary_survey_IBS</em>,</p>
+<p>The <strong>GMM</strong> function in the <em>ClusterR</em> package is an R implementation of the <a href="https://arma.sourceforge.net/docs.html#gmm_diag">Armadillo library</a> class for modeling data as a Gaussian Mixture Model (GMM), under the assumption of <em>diagonal</em> covariance matrices. A number of function parameters can be tuned, among others the <em>gaussian_comps</em>, the <em>dist_mode</em> (eucl_dist, maha_dist), the <em>seed_mode</em> (static_subset, random_subset, static_spread, random_spread), the <em>km_iter</em> and the <em>em_iter</em> (more information about the parameters can be found in the package documentation). I’ll illustrate the <em>GMM</em> function using the synthetic data <em>dietary_survey_IBS</em>,</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ClusterR)</span></code></pre></div>
 <pre><code>## Loading required package: gtools</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(dietary_survey_IBS)</span>
@@ -326,7 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.120393 secs</code></pre>
+<pre><code>## time to complete : 3.009537 secs</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>getcent_init <span class="ot">=</span> km_init<span class="sc">$</span>centroids</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>getclust_init <span class="ot">=</span> km_init<span class="sc">$</span>clusters</span>
@@ -352,7 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 0.8975329 secs</code></pre>
+<pre><code>## time to complete : 0.8492379 secs</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>getcent_mb <span class="ot">=</span> km_mb<span class="sc">$</span>centroids</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>new_im_mb <span class="ot">=</span> getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span></span>
@@ -384,7 +384,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">=</span> <span class="fu">Cluster_Medoids</span>(gwd_mat, <span class="at">clusters =</span> <span class="dv">2</span>, <span class="at">swap_phase =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> F)</span></code></pre></div>
 <pre><code>## Warning: The `seed` argument of `Cluster_Medoids()` is deprecated as of ClusterR 1.2.6.
-## The &#39;seed&#39; parameter will be removed in version 1.3.0</code></pre>
+## ℹ The &#39;seed&#39; parameter will be removed in version 1.3.0</code></pre>
 <p><br></p>
 <table>
 <caption>Non-Weigthed-K-medoids</caption>
@@ -551,7 +551,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 2.680192 secs</code></pre>
+<pre><code>## time to complete : 2.727139 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -579,7 +579,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 12.90195 secs</code></pre>
+<pre><code>## time to complete : 12.75173 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>
