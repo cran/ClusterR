@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2022-12-03" />
+<meta name="date" content="2022-12-13" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author">Lampros Mouselimis</h4>
-<h4 class="date">2022-12-03</h4>
+<h4 class="date">2022-12-13</h4>
 
 
 
@@ -326,7 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.009537 secs</code></pre>
+<pre><code>## time to complete : 3.033754 secs</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>getcent_init <span class="ot">=</span> km_init<span class="sc">$</span>centroids</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>getclust_init <span class="ot">=</span> km_init<span class="sc">$</span>clusters</span>
@@ -352,7 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 0.8492379 secs</code></pre>
+<pre><code>## time to complete : 0.8585055 secs</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>getcent_mb <span class="ot">=</span> km_mb<span class="sc">$</span>centroids</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>new_im_mb <span class="ot">=</span> getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span></span>
@@ -551,7 +551,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 2.727139 secs</code></pre>
+<pre><code>## time to complete : 2.887407 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -579,7 +579,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 12.75173 secs</code></pre>
+<pre><code>## time to complete : 13.11005 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>

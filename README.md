@@ -2,7 +2,7 @@
 ## ClusterR
 <br>
 
-The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the [blog-post](http://mlampros.github.io/2016/09/12/clusterR_package/), Vignette and in the package Documentation ( *scroll down for information on how to use the* **docker image** )
+The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the blog-posts ([first](http://mlampros.github.io/2016/09/12/clusterR_package/) and [second](http://mlampros.github.io/2022/12/04/comparison_partition_around_medoid/)), Vignette and in the package Documentation ( *scroll down for information on how to use the* **docker image** )
 <br><br>
 
 **UPDATE 16-08-2018**
@@ -239,7 +239,7 @@ If you use the code of this repository in your paper or research please cite bot
   title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans, K-Medoids and Affinity Propagation Clustering},
   author = {Lampros Mouselimis},
   year = {2022},
-  note = {R package version 1.2.8},
+  note = {R package version 1.2.9},
   url = {https://CRAN.R-project.org/package=ClusterR},
 }
 ```

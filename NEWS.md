@@ -1,4 +1,9 @@
 
+## Cluster 1.2.9
+
+* The pull request #41 removed the class *'Gaussian Mixture Models'* from the *'Optimal_Clusters_GMM()'* function and I adjusted the tests related to the *'Optimal_Clusters_GMM()'* function so that no errors are raised (see issue: https://github.com/mlampros/ClusterR/issues/40)
+
+
 ## Cluster 1.2.8
 
 * I added the *cost_clusters_from_dissim_medoids()* function
