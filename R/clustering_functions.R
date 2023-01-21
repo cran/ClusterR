@@ -567,6 +567,52 @@ print.KMeansCluster <- function(x, ...) {
       "SS:", x$total_SSE, "=", WSSE, "(WSS) +", BSSE, "(BSS)\n")
 }
 
+
+
+#' Silhouette width based on pre-computed clusters
+#'
+#' @param data a matrix or a data frame
+#' @param clusters a numeric vector which corresponds to the pre-computed clusters (see the example section for more details). The size of the 'clusters' vector must be equal to the number of rows of the input data
+#' @return a list object where the first sublist is the 'silhouette summary', the second sublist is the 'silhouette matrix' and the third sublist is the 'global average silhouette' (based on the silhouette values of all observations)
+#' @author Lampros Mouselimis
+#' @export
+#' @examples
+#'
+#' data(dietary_survey_IBS)
+#' dat = dietary_survey_IBS[, -ncol(dietary_survey_IBS)]
+#' dat = center_scale(dat)
+#'
+#' clusters = 2
+#'
+#' # compute k-means
+#' km = KMeans_rcpp(dat, clusters = clusters, num_init = 5, max_iters = 100, initializer = 'kmeans++')
+#'
+#' # compute the silhouette width
+#' silh_km = silhouette_of_clusters(data = dat, clusters = km$clusters)
+#'
+#' # silhouette summary
+#' silh_summary = silh_km$silhouette_summary
+#'
+#' # silhouette matrix (including cluster & dissimilarity)
+#' silh_mtrx = silh_km$silhouette_matrix
+#'
+#' # global average silhouette
+#' glob_avg = silh_km$silhouette_global_average
+#'
+
+silhouette_of_clusters = function(data, clusters) {
+
+  if ('data.frame' %in% class(data)) data = as.matrix(data)
+  if (!inherits(data, 'matrix')) stop('the "data" parameter must be either a matrix or a data frame!')
+  if (!inherits(clusters, c('numeric', 'integer'))) stop('the "clusters" parameter must be either of type numeric or of type integer!')
+  if (nrow(data) != length(clusters)) stop("I expect that the number of observations of the 'clusters' parameter is equal to the number of rows of the input 'data'!")
+
+  silh_lst = silhouette_clusters(data, clusters)
+  colnames(silh_lst[["silhouette_matrix"]]) = c('cluster', 'intra_cluster_dissim', 'silhouette')
+  return(silh_lst)
+}
+
+
 #' Optimal number of Clusters for Kmeans or Mini-Batch-Kmeans
 #'
 #' @param data matrix or data frame
@@ -593,7 +639,7 @@ print.KMeansCluster <- function(x, ...) {
 #'
 #' \strong{dissimilarity}      : the average intra-cluster-dissimilarity of all clusters (the distance metric defaults to euclidean)
 #'
-#' \strong{silhouette}         : the average silhouette width of all clusters (the distance metric defaults to euclidean)
+#' \strong{silhouette}         : the average silhouette width where first the average per cluster silhouette is computed and then the global average (the distance metric defaults to euclidean). To compute the silhouette width for each cluster separately see the 'silhouette_of_clusters()' function
 #'
 #' \strong{distortion_fK}      : this criterion is based on the following paper, 'Selection of K in K-means clustering' (https://www.ee.columbia.edu/~dpwe/papers/PhamDN05-kmeans.pdf)
 #'
@@ -776,16 +822,11 @@ Optimal_Clusters_KMeans = function(data, max_clusters, criterion = "variance_exp
     if (criterion == "silhouette") {
 
       if (i == 1) {
-
-        vec_out[COUNT] = 0.0}
-
+        vec_out[COUNT] = 0.0
+      }
       else {
-
-        eval_km = evaluation_rcpp(data, as.vector(km$clusters), TRUE)
-
-        tmp_silh = mean(stats::na.omit(unlist(lapply(eval_km$silhouette, mean))))
-
-        vec_out[COUNT] = tmp_silh
+        silh_out = silhouette_of_clusters(data = data, clusters = as.vector(km$clusters))
+        vec_out[COUNT] = silh_out$silhouette_global_average          # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html#sklearn.metrics.silhouette_score
       }
     }
 
@@ -1113,7 +1154,7 @@ cost_clusters_from_dissim_medoids = function(data, medoids) {
 #' @param swap_phase either TRUE or FALSE. If TRUE then both phases ('build' and 'swap') will take place. The 'swap_phase' is considered more computationally intensive.
 #' @param fuzzy either TRUE or FALSE. If TRUE, then probabilities for each cluster will be returned based on the distance between observations and medoids
 #' @param verbose either TRUE or FALSE, indicating whether progress is printed during clustering
-#' @param seed `r lifecycle::badge("deprecated")` `seed` (integer value for random number generator (RNG)) is no longer supported and will be removed in version 1.3.0
+#' @param seed `r lifecycle::badge("deprecated")` `seed` (integer value for random number generator (RNG)) is no longer supported and will be removed in version 1.4.0
 #' @return a list with the following attributes: medoids, medoid_indices, best_dissimilarity, dissimilarity_matrix, clusters, fuzzy_probs (if fuzzy = TRUE), silhouette_matrix, clustering_stats
 #' @author Lampros Mouselimis
 #' @details
@@ -1140,7 +1181,7 @@ Cluster_Medoids = function(data, clusters, distance_metric = 'euclidean', minkow
     lifecycle::deprecate_warn(
       when = "1.2.6",
       what = "Cluster_Medoids(seed)",
-      details = "The 'seed' parameter will be removed in version 1.3.0"
+      details = "The 'seed' parameter will be removed in version 1.4.0"
     )
   }
 
