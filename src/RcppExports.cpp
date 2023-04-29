@@ -23,15 +23,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // validate_centroids
-arma::rowvec validate_centroids(arma::mat& data, arma::mat init_centroids, int threads);
-RcppExport SEXP _ClusterR_validate_centroids(SEXP dataSEXP, SEXP init_centroidsSEXP, SEXP threadsSEXP) {
+Rcpp::List validate_centroids(arma::mat& data, arma::mat init_centroids, int threads, bool fuzzy, double eps);
+RcppExport SEXP _ClusterR_validate_centroids(SEXP dataSEXP, SEXP init_centroidsSEXP, SEXP threadsSEXP, SEXP fuzzySEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type data(dataSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type init_centroids(init_centroidsSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(validate_centroids(data, init_centroids, threads));
+    Rcpp::traits::input_parameter< bool >::type fuzzy(fuzzySEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(validate_centroids(data, init_centroids, threads, fuzzy, eps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -163,8 +165,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // GMM_arma
-Rcpp::List GMM_arma(arma::mat& data, int gaussian_comps, std::string dist_mode, std::string seed_mode, int km_iter, int em_iter, bool verbose, double var_floor, int seed);
-RcppExport SEXP _ClusterR_GMM_arma(SEXP dataSEXP, SEXP gaussian_compsSEXP, SEXP dist_modeSEXP, SEXP seed_modeSEXP, SEXP km_iterSEXP, SEXP em_iterSEXP, SEXP verboseSEXP, SEXP var_floorSEXP, SEXP seedSEXP) {
+Rcpp::List GMM_arma(arma::mat& data, int gaussian_comps, std::string dist_mode, std::string seed_mode, int km_iter, int em_iter, bool verbose, double var_floor, int seed, bool full_covariance_matrices);
+RcppExport SEXP _ClusterR_GMM_arma(SEXP dataSEXP, SEXP gaussian_compsSEXP, SEXP dist_modeSEXP, SEXP seed_modeSEXP, SEXP km_iterSEXP, SEXP em_iterSEXP, SEXP verboseSEXP, SEXP var_floorSEXP, SEXP seedSEXP, SEXP full_covariance_matricesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -177,7 +179,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< double >::type var_floor(var_floorSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(GMM_arma(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed));
+    Rcpp::traits::input_parameter< bool >::type full_covariance_matrices(full_covariance_matricesSEXP);
+    rcpp_result_gen = Rcpp::wrap(GMM_arma(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed, full_covariance_matrices));
     return rcpp_result_gen;
 END_RCPP
 }

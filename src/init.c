@@ -16,7 +16,7 @@ extern SEXP _ClusterR_cost_clusters_from_dis_meds(SEXP, SEXP);
 extern SEXP _ClusterR_dissim_mat(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_dissim_MEDOIDS(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_evaluation_rcpp(SEXP, SEXP, SEXP);
-extern SEXP _ClusterR_GMM_arma(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP _ClusterR_GMM_arma(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_GMM_arma_AIC_BIC(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_KMEANS_arma(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_KMEANS_rcpp(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -30,7 +30,7 @@ extern SEXP _ClusterR_preferenceRange(SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_SCALE(SEXP, SEXP, SEXP);
 extern SEXP _ClusterR_silhouette_clusters(SEXP, SEXP);
 extern SEXP _ClusterR_split_rcpp_lst(SEXP);
-extern SEXP _ClusterR_validate_centroids(SEXP, SEXP, SEXP);
+extern SEXP _ClusterR_validate_centroids(SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ClusterR_affinity_propagation",        (DL_FUNC) &_ClusterR_affinity_propagation,         9},
@@ -41,7 +41,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ClusterR_dissim_mat",                  (DL_FUNC) &_ClusterR_dissim_mat,                   7},
     {"_ClusterR_dissim_MEDOIDS",              (DL_FUNC) &_ClusterR_dissim_MEDOIDS,               6},
     {"_ClusterR_evaluation_rcpp",             (DL_FUNC) &_ClusterR_evaluation_rcpp,              3},
-    {"_ClusterR_GMM_arma",                    (DL_FUNC) &_ClusterR_GMM_arma,                     9},
+    {"_ClusterR_GMM_arma",                    (DL_FUNC) &_ClusterR_GMM_arma,                    10},
     {"_ClusterR_GMM_arma_AIC_BIC",            (DL_FUNC) &_ClusterR_GMM_arma_AIC_BIC,            10},
     {"_ClusterR_KMEANS_arma",                 (DL_FUNC) &_ClusterR_KMEANS_arma,                  7},
     {"_ClusterR_KMEANS_rcpp",                 (DL_FUNC) &_ClusterR_KMEANS_rcpp,                 12},
@@ -55,7 +55,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ClusterR_SCALE",                       (DL_FUNC) &_ClusterR_SCALE,                        3},
     {"_ClusterR_silhouette_clusters",         (DL_FUNC) &_ClusterR_silhouette_clusters,          2},
     {"_ClusterR_split_rcpp_lst",              (DL_FUNC) &_ClusterR_split_rcpp_lst,               1},
-    {"_ClusterR_validate_centroids",          (DL_FUNC) &_ClusterR_validate_centroids,           3},
+    {"_ClusterR_validate_centroids",          (DL_FUNC) &_ClusterR_validate_centroids,           5},
     {NULL, NULL, 0}
 };
 

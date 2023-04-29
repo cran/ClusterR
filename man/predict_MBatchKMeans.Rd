@@ -2,9 +2,12 @@
 % Please edit documentation in R/clustering_functions.R
 \name{predict_MBatchKMeans}
 \alias{predict_MBatchKMeans}
+\alias{predict.MBatchKMeans}
 \title{Prediction function for Mini-Batch-k-means}
 \usage{
-predict_MBatchKMeans(data, CENTROIDS, fuzzy = FALSE)
+predict_MBatchKMeans(data, CENTROIDS, fuzzy = FALSE, updated_output = FALSE)
+
+\method{predict}{MBatchKMeans}(object, newdata, fuzzy = FALSE, ...)
 }
 \arguments{
 \item{data}{matrix or data frame}
@@ -12,6 +15,10 @@ predict_MBatchKMeans(data, CENTROIDS, fuzzy = FALSE)
 \item{CENTROIDS}{a matrix of initial cluster centroids. The rows of the CENTROIDS matrix should be equal to the number of clusters and the columns should equal the columns of the data.}
 
 \item{fuzzy}{either TRUE or FALSE. If TRUE then prediction probabilities will be calculated using the distance between observations and centroids.}
+
+\item{updated_output}{either TRUE or FALSE. If TRUE then the 'predict_MBatchKMeans' function will follow the same output object behaviour as the 'predict_KMeans' function (if fuzzy is TRUE it will return probabilities otherwise it will return the hard clusters). This parameter will be removed in version 1.4.0 because this will become the default output format.}
+
+\item{object, newdata, ...}{arguments for the `predict` generic}
 }
 \value{
 if fuzzy = TRUE the function returns a list with two attributes: a vector with the clusters and a matrix with cluster probabilities. Otherwise, it returns a vector with the clusters.

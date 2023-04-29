@@ -2,7 +2,6 @@
 # include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::plugins(openmp)]]
-// [[Rcpp::plugins(cpp11)]]
 
 
 # include "ClusterRHeader.h"
@@ -31,11 +30,11 @@ bool check_NaN_Inf(arma::mat x) {
 //
 
 // [[Rcpp::export]]
-arma::rowvec validate_centroids(arma::mat& data, arma::mat init_centroids, int threads) {
+Rcpp::List validate_centroids(arma::mat& data, arma::mat init_centroids, int threads = 1, bool fuzzy = false, double eps = 1.0e-6) {
 
   ClustHeader CRH;
 
-  return CRH.validate_centroids(data, init_centroids, threads);
+  return CRH.validate_centroids(data, init_centroids, threads, fuzzy, eps);
 }
 
 
@@ -195,13 +194,29 @@ Rcpp::List Predict_mini_batch_kmeans(arma::mat& data, arma::mat& CENTROIDS, bool
 //
 
 // [[Rcpp::export]]
-Rcpp::List GMM_arma(arma::mat& data, int gaussian_comps, std::string dist_mode, std::string seed_mode, int km_iter, int em_iter,
-
-                    bool verbose, double var_floor = 1e-10, int seed = 1) {
+Rcpp::List GMM_arma(arma::mat& data,
+                    int gaussian_comps,
+                    std::string dist_mode,
+                    std::string seed_mode,
+                    int km_iter,
+                    int em_iter,
+                    bool verbose,
+                    double var_floor = 1e-10,
+                    int seed = 1,
+                    bool full_covariance_matrices = false) {
 
   ClustHeader CRH;
 
-  return CRH.GMM_arma(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed);
+  return CRH.GMM_arma(data,
+                      gaussian_comps,
+                      dist_mode,
+                      seed_mode,
+                      km_iter,
+                      em_iter,
+                      verbose,
+                      var_floor,
+                      seed,
+                      full_covariance_matrices);
 }
 
 

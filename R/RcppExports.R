@@ -5,8 +5,8 @@ check_NaN_Inf <- function(x) {
     .Call(`_ClusterR_check_NaN_Inf`, x)
 }
 
-validate_centroids <- function(data, init_centroids, threads) {
-    .Call(`_ClusterR_validate_centroids`, data, init_centroids, threads)
+validate_centroids <- function(data, init_centroids, threads = 1L, fuzzy = FALSE, eps = 1.0e-6) {
+    .Call(`_ClusterR_validate_centroids`, data, init_centroids, threads, fuzzy, eps)
 }
 
 SCALE <- function(data, mean_center = TRUE, sd_scale = TRUE) {
@@ -41,8 +41,8 @@ Predict_mini_batch_kmeans <- function(data, CENTROIDS, fuzzy = FALSE, eps = 1.0e
     .Call(`_ClusterR_Predict_mini_batch_kmeans`, data, CENTROIDS, fuzzy, eps)
 }
 
-GMM_arma <- function(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor = 1e-10, seed = 1L) {
-    .Call(`_ClusterR_GMM_arma`, data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed)
+GMM_arma <- function(data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor = 1e-10, seed = 1L, full_covariance_matrices = FALSE) {
+    .Call(`_ClusterR_GMM_arma`, data, gaussian_comps, dist_mode, seed_mode, km_iter, em_iter, verbose, var_floor, seed, full_covariance_matrices)
 }
 
 predict_MGausDPDF <- function(data, CENTROIDS, COVARIANCE, WEIGHTS, eps = 1.0e-8) {
