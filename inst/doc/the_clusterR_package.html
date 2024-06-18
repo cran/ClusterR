@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2023-12-04" />
+<meta name="date" content="2024-06-18" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author">Lampros Mouselimis</h4>
-<h4 class="date">2023-12-04</h4>
+<h4 class="date">2024-06-18</h4>
 
 
 
@@ -648,7 +648,7 @@ KMeans_rcpp and MiniBatchKmeans functions, <br></p>
 <span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  </span>
 <span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 2.47743 secs</code></pre>
+<pre><code>## time to complete : 2.347765 secs</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>getcent_init <span class="ot">=</span> km_init<span class="sc">$</span>centroids</span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>getclust_init <span class="ot">=</span> km_init<span class="sc">$</span>clusters</span>
@@ -682,7 +682,7 @@ KMeans_rcpp and MiniBatchKmeans functions, <br></p>
 <span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  </span>
 <span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 1.052428 secs</code></pre>
+<pre><code>## time to complete : 1.074739 secs</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>getcent_mb <span class="ot">=</span> km_mb<span class="sc">$</span>centroids</span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>new_im_mb <span class="ot">=</span> getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span></span>
@@ -953,7 +953,7 @@ page 318</em>).<br><br></p>
 <span id="cb29-15"><a href="#cb29-15" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb29-16"><a href="#cb29-16" tabindex="-1"></a>  </span>
 <span id="cb29-17"><a href="#cb29-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.090636 secs</code></pre>
+<pre><code>## time to complete : 3.033883 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -981,7 +981,7 @@ page 318</em>).<br><br></p>
 <span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>  </span>
 <span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 15.22999 secs</code></pre>
+<pre><code>## time to complete : 14.84171 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>
