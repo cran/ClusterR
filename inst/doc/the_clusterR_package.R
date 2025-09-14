@@ -13,68 +13,68 @@ y = dietary_survey_IBS[, ncol(dietary_survey_IBS)]    # the response variable
 dat = center_scale(X, mean_center = T, sd_scale = T)  # centering and scaling the data
 
 ## ----eval = F-----------------------------------------------------------------
-#  gmm = GMM(dat, 2, dist_mode = "maha_dist", seed_mode = "random_subset", km_iter = 10,
-#            em_iter = 10, verbose = F)
-#  
-#  # predict centroids, covariance matrix and weights
-#  pr = predict(gmm, newdata = dat)
-#  
+# gmm = GMM(dat, 2, dist_mode = "maha_dist", seed_mode = "random_subset", km_iter = 10,
+#           em_iter = 10, verbose = F)
+# 
+# # predict centroids, covariance matrix and weights
+# pr = predict(gmm, newdata = dat)
+# 
 
 ## ----eval = F-----------------------------------------------------------------
-#  
-#  opt_gmm = Optimal_Clusters_GMM(dat, max_clusters = 10, criterion = "BIC",
-#  
-#                                 dist_mode = "maha_dist", seed_mode = "random_subset",
-#  
-#                                 km_iter = 10, em_iter = 10, var_floor = 1e-10,
-#  
-#                                 plot_data = T)
-#  
+# 
+# opt_gmm = Optimal_Clusters_GMM(dat, max_clusters = 10, criterion = "BIC",
+# 
+#                                dist_mode = "maha_dist", seed_mode = "random_subset",
+# 
+#                                km_iter = 10, em_iter = 10, var_floor = 1e-10,
+# 
+#                                plot_data = T)
+# 
 
 ## ----eval = F-----------------------------------------------------------------
-#  
-#  res = external_validation(dietary_survey_IBS$class, pr$cluster_labels,
-#  
-#                            method = "adjusted_rand_index", summary_stats = T)
-#  
-#  res
-#  
-#  ##
-#  ## ----------------------------------------
-#  ## purity                         : 1
-#  ## entropy                        : 0
-#  ## normalized mutual information  : 1
-#  ## variation of information       : 0
-#  ## ----------------------------------------
-#  ## specificity                    : 1
-#  ## sensitivity                    : 1
-#  ## precision                      : 1
-#  ## recall                         : 1
-#  ## F-measure                      : 1
-#  ## ----------------------------------------
-#  ## accuracy OR rand-index         : 1
-#  ## adjusted-rand-index            : 1
-#  ## jaccard-index                  : 1
-#  ## fowlkes-mallows-index          : 1
-#  ## mirkin-metric                  : 0
-#  ## ----------------------------------------
-#  
+# 
+# res = external_validation(dietary_survey_IBS$class, pr$cluster_labels,
+# 
+#                           method = "adjusted_rand_index", summary_stats = T)
+# 
+# res
+# 
+# ##
+# ## ----------------------------------------
+# ## purity                         : 1
+# ## entropy                        : 0
+# ## normalized mutual information  : 1
+# ## variation of information       : 0
+# ## ----------------------------------------
+# ## specificity                    : 1
+# ## sensitivity                    : 1
+# ## precision                      : 1
+# ## recall                         : 1
+# ## F-measure                      : 1
+# ## ----------------------------------------
+# ## accuracy OR rand-index         : 1
+# ## adjusted-rand-index            : 1
+# ## jaccard-index                  : 1
+# ## fowlkes-mallows-index          : 1
+# ## mirkin-metric                  : 0
+# ## ----------------------------------------
+# 
 
 ## ----eval = F-----------------------------------------------------------------
-#  
-#  pca_dat = stats::princomp(dat)$scores[, 1:2]
-#  
-#  km = KMeans_arma(pca_dat, clusters = 2, n_iter = 10, seed_mode = "random_subset",
-#  
-#                   verbose = T, CENTROIDS = NULL)
-#  
-#  pr = predict_KMeans(pca_dat, km)
-#  
-#  table(dietary_survey_IBS$class, pr)
-#  
-#  class(km) = 'matrix'
-#  
-#  plot_2d(data = pca_dat, clusters = as.vector(pr), centroids_medoids = as.matrix(km))
+# 
+# pca_dat = stats::princomp(dat)$scores[, 1:2]
+# 
+# km = KMeans_arma(pca_dat, clusters = 2, n_iter = 10, seed_mode = "random_subset",
+# 
+#                  verbose = T, CENTROIDS = NULL)
+# 
+# pr = predict_KMeans(pca_dat, km)
+# 
+# table(dietary_survey_IBS$class, pr)
+# 
+# class(km) = 'matrix'
+# 
+# plot_2d(data = pca_dat, clusters = as.vector(pr), centroids_medoids = as.matrix(km))
 
 ## ----fig.width = 3.0, fig.height = 3.0, echo = T, eval = T--------------------
 
