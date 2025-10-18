@@ -5,12 +5,7 @@
 The ClusterR package consists of Gaussian mixture models, k-means, mini-batch-kmeans, k-medoids and affinity propagation clustering algorithms with the option to plot, validate, predict (new data) and find the optimal number of clusters. The package takes advantage of 'RcppArmadillo' to speed up the computationally intensive parts of the functions. More details on the functionality of ClusterR can be found in the blog-posts ([first](http://mlampros.github.io/2016/09/12/clusterR_package/) and [second](http://mlampros.github.io/2022/12/04/comparison_partition_around_medoid/)), Vignette and in the package Documentation ( *scroll down for information on how to use the* **docker image** )
 <br><br>
 
-**UPDATE 16-08-2018**
-
-
-As of version 1.1.4 the *ClusterR* package allows R package maintainers to perform **linking between packages at a C++ code (Rcpp) level**. This means that the Rcpp functions of the *ClusterR* package can be called in the C++ files of another package. In the next lines I'll give detailed explanations on how this can be done:
-
-<br>
+***UPDATE 16-08-2018***: As of version 1.1.4 the *ClusterR* package allows R package maintainers to perform **linking between packages at a C++ code (Rcpp) level**. This means that the Rcpp functions of the *ClusterR* package can be called in the C++ files of another package. In the next lines I'll give detailed explanations on how this can be done:
 
 Assumming that an R package ('PackageA') calls one of the *ClusterR* Rcpp functions. Then the maintainer of 'PackageA' has to :
 
@@ -30,13 +25,13 @@ install.packages("ClusterR")
 
 <br>
 
-or download the latest version from Github using the *remotes* package,
+or download the latest version from Github using the *pak* package,
 
 <br>
 
 ```R
 
-remotes::install_github('mlampros/ClusterR', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')
+pak::pak('mlampros/ClusterR')
  
 
 ```
@@ -150,13 +145,8 @@ Use the following link to report bugs/issues,
 <br>
 
 
-**UPDATE 28-11-2019**
+***UPDATE 28-11-2019***: **Docker images** of the *ClusterR* package are available to download from my [dockerhub](https://hub.docker.com/r/mlampros/clusterr) account. The images come with *Rstudio* and the *R-development* version (latest) installed. The whole process was tested on Ubuntu 18.04. To **pull** & **run** the image do the following,
 
-<br>
-
-**Docker images** of the *ClusterR* package are available to download from my [dockerhub](https://hub.docker.com/r/mlampros/clusterr) account. The images come with *Rstudio* and the *R-development* version (latest) installed. The whole process was tested on Ubuntu 18.04. To **pull** & **run** the image do the following,
-
-<br>
 
 ```R
 
@@ -239,7 +229,7 @@ If you use the code of this repository in your paper or research please cite bot
   title = {{ClusterR}: Gaussian Mixture Models, K-Means, Mini-Batch-Kmeans, K-Medoids and Affinity Propagation Clustering},
   author = {Lampros Mouselimis},
   year = {2025},
-  note = {R package version 1.3.4},
+  note = {R package version 1.3.5},
   url = {https://CRAN.R-project.org/package=ClusterR},
 }
 ```

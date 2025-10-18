@@ -1,4 +1,11 @@
 
+## ClusterR 1.3.5
+
+* I removed the `SystemRequirements` from the DESCRIPTION file.
+* The `predict_GMM` function was updated and now it supports also the full covariance type (https://github.com/mlampros/ClusterR/pull/66)
+* I fixed a bug in the `normalization constant calculation` of the `predict_MGausDPDF()` function.
+
+
 ## ClusterR 1.3.4
 
 * I updated the `Makevars` and `Makevars.win` files by adding `-DARMA_USE_CURRENT` (see issue: https://github.com/RcppCore/RcppArmadillo/issues/476)
@@ -225,4 +232,7 @@ I modified the RcppArmadillo functions so that ClusterR passes the Windows and O
 
 
 ## ClusterR 1.0.0
+
+
+
 
