@@ -1,10 +1,10 @@
-2d7b3a15eb5046a3f6e40346060590a0 *DESCRIPTION
+467184fba6e69887ef605a6cf3fa4db2 *DESCRIPTION
 ce396131315715ee323f260d79daf914 *NAMESPACE
-798b7151668b6bc78f570fc2f4bc2e88 *NEWS.md
+b5305415fca30db70bdb0f69a3e4d5c0 *NEWS.md
 fa44f7db33b1695e3e153e9623533979 *R/ClusterR.R
 ea4a8ea2c5ca3c759180373385573c40 *R/RcppExports.R
-722302b87188d0cc7126964372a17032 *R/clustering_functions.R
-5c6d302b2c7ea3d1045a315a74b182b2 *README.md
+00c2fe2755b670119130134d1b20443c *R/clustering_functions.R
+574138781417449b43cc173f4521a3db *README.md
 e31486ef5ee9d8ab031f6750343809fa *build/vignette.rds
 8b6687f3bb9c58cd74ae67670872215d *data/dietary_survey_IBS.rda
 aa58963ebd13c4c91edf809ca4efc5d4 *data/mushroom.rda
@@ -12,7 +12,7 @@ a9e3dfd8650ed7d2d0a91d3880a67f7b *data/soybean.rda
 548bd4cfa291efb785847523a1e778a2 *inst/CITATION
 ae73bb7797f12478a550743017ca72dc *inst/doc/the_clusterR_package.R
 46170c874fed52fdaad860e16c074201 *inst/doc/the_clusterR_package.Rmd
-0910afc38b887046136843ec8b5cbe4c *inst/doc/the_clusterR_package.html
+0fb9b770bb9423715e6b8827caa5c599 *inst/doc/the_clusterR_package.html
 8a18ed5f7a3db381b4d49f1bb6c8cc3e *inst/include/ClusterRHeader.h
 c2ae759f5281f5130647d03ca50ac00d *inst/include/affinity_propagation.h
 ba0b9081bf4563b048ce8c4d5ab14062 *inst/papers_references/the_pam_clustering_algorithm.pdf
@@ -37,7 +37,7 @@ d84e7cd6ba1fec62441600456b4b0afa *man/cost_clusters_from_dissim_medoids.Rd
 7fba796de74a521b8d53585b34190efa *man/function_interactive.Rd
 927528749edcef3b9d584eb83190667f *man/mushroom.Rd
 16da6ce11b164d15d4ddf7adc8ba55be *man/plot_2d.Rd
-de474bd387830985764349c3e3a2162f *man/predict_GMM.Rd
+babf7f7b4c5b6768a1e38e2cbf6d6de4 *man/predict_GMM.Rd
 7e3302d8c9af6978fe22ca198d7ee014 *man/predict_KMeans.Rd
 92ed5e3337724804d3834399aa77b4a7 *man/predict_MBatchKMeans.Rd
 ecdb6add306f48f406b66a67a36578f2 *man/predict_Medoids.Rd
@@ -54,7 +54,7 @@ f9a84b86a25b42c726e026fb44f31188 *src/RcppExports.cpp
 3243b3e7b85ca7953f191679629429ec *tests/testthat.R
 da6089605f19e81a83128510619ce75b *tests/testthat/test-AP.R
 9cf4cd722410d4c4997c81b1c0b06563 *tests/testthat/test-dissimilarity_matrices.R
-71d2aea749a202813790cc5ac3d1087c *tests/testthat/test-gmm.R
+775035d98f7e81c653ad9f8f451aba8d *tests/testthat/test-gmm.R
 251737e6f0ac23209228f116f6bfcfe5 *tests/testthat/test-kmeans.R
 2b34e85cd1960359a97f70ef3daa3efc *tests/testthat/test-medoids.R
 9403c32efc87f4930b8c6ba08b7bf6e8 *tests/testthat/test-plot2d_silhouette_plot_ext_validation_center_scale_dist_mat.R

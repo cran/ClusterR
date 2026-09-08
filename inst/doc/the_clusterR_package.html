@@ -12,7 +12,7 @@
 
 <meta name="author" content="Lampros Mouselimis" />
 
-<meta name="date" content="2025-12-22" />
+<meta name="date" content="2026-09-08" />
 
 <title>Functionality of the ClusterR package</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Functionality of the ClusterR package</h1>
 <h4 class="author">Lampros Mouselimis</h4>
-<h4 class="date">2025-12-22</h4>
+<h4 class="date">2026-09-08</h4>
 
 
 
@@ -648,7 +648,7 @@ KMeans_rcpp and MiniBatchKmeans functions, <br></p>
 <span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  </span>
 <span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.202096 secs</code></pre>
+<pre><code>## time to complete : 5.054371 secs</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>getcent_init <span class="ot">=</span> km_init<span class="sc">$</span>centroids</span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>getclust_init <span class="ot">=</span> km_init<span class="sc">$</span>clusters</span>
@@ -674,7 +674,7 @@ KMeans_rcpp and MiniBatchKmeans functions, <br></p>
 ##   it also returns the hard clusters
 ## i The deprecated feature was likely used in the ClusterR package.
 ##   Please report the issue at &lt;https://github.com/mlampros/ClusterR/issues&gt;.
-## This warning is displayed once every 8 hours.
+## This warning is displayed once per session.
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.</code></pre>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>end <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
@@ -682,7 +682,7 @@ KMeans_rcpp and MiniBatchKmeans functions, <br></p>
 <span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  </span>
 <span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 1.105195 secs</code></pre>
+<pre><code>## time to complete : 2.734038 secs</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>getcent_mb <span class="ot">=</span> km_mb<span class="sc">$</span>centroids</span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>new_im_mb <span class="ot">=</span> getcent_mb[pr_mb, ]   <span class="co"># each observation is associated with the nearby centroid</span></span>
@@ -755,7 +755,7 @@ each separate predictor,</p>
 <span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a>cm <span class="ot">=</span> <span class="fu">Cluster_Medoids</span>(gwd_mat, <span class="at">clusters =</span> <span class="dv">2</span>, <span class="at">swap_phase =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> F)</span></code></pre></div>
 <pre><code>## Warning: The `seed` argument of `Cluster_Medoids()` is deprecated as of ClusterR 1.2.6.
 ## i The &#39;seed&#39; parameter will be removed in version 1.4.0
-## This warning is displayed once every 8 hours.
+## This warning is displayed once per session.
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.</code></pre>
 <p><br></p>
@@ -953,7 +953,7 @@ page 318</em>).<br><br></p>
 <span id="cb29-15"><a href="#cb29-15" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb29-16"><a href="#cb29-16" tabindex="-1"></a>  </span>
 <span id="cb29-17"><a href="#cb29-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 3.59919 secs</code></pre>
+<pre><code>## time to complete : 5.576657 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Clara-Medoids</caption>
@@ -981,7 +981,7 @@ page 318</em>).<br><br></p>
 <span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>t <span class="ot">=</span> end <span class="sc">-</span> start</span>
 <span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>  </span>
 <span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;time to complete :&#39;</span>, t, <span class="fu">attributes</span>(t)<span class="sc">$</span>units, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
-<pre><code>## time to complete : 16.20078 secs</code></pre>
+<pre><code>## time to complete : 18.06197 secs</code></pre>
 <p><br></p>
 <table>
 <caption>hamming-Cluster-Medoids</caption>
